@@ -120,6 +120,31 @@ This game is built in modular Python, making it easy to extend with:
 - **Endings System** - 5 different endings based on player actions
 - **Save System** - Persistent save files with full game state
 
+### Development Tools
+
+This project uses the following tools for formatting and linting:
+
+- `black` — opinionated code formatter (used to format source files)
+- `ruff` — fast linter and fixer for Python (used to check for issues and apply small fixes)
+
+Recommended setup (macOS / Linux):
+
+```bash
+# Install tools (user install)
+python3 -m pip install --user black ruff
+
+# Format code with Black
+python3 -m black src main.py
+
+# Run Ruff checks
+python3 -m ruff check src
+
+# Optionally, apply automatic Ruff fixes
+python3 -m ruff check src --fix
+```
+
+I recommend keeping `black` and `ruff` as the authoritative tools for style. I removed `flake8` from the repository tooling to avoid overlapping rules; if you prefer `flake8`, we can reintroduce it with a configured profile.
+
 ## Future Enhancements
 
 Potential features to add:

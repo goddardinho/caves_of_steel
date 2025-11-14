@@ -1,0 +1,24 @@
+# Save files and runtime config
+saves/
+game_config.json
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Editor/temp files
+.DS_Store
+*.swp
+*.swo
+
+# Virtualenv / environment folders
+env/
+venv/
+.venv/
+
+# IDE folders
+.vscode/
+.idea/
+
+# Logs
+*.log
