@@ -35,7 +35,6 @@ class CommandProcessor:
             "status": self.cmd_status,
             "help": self.cmd_help,
             "accuse": self.cmd_accuse,
-            "solve": self.cmd_solve,
             "relationships": self.cmd_relationships,
             "mystery": self.cmd_mystery,
             "puzzle": self.cmd_puzzle,

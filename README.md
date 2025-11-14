@@ -32,7 +32,7 @@ The investigation will take you through the depths of the Caves of Steel—from 
 ### Installation
 
 ```bash
-cd personal-text-game
+cd caves_of_steel
 python3 main.py
 ```
 

@@ -11,10 +11,20 @@ from datetime import datetime
 class SaveSystem:
     """Manages saving and loading game progress."""
     
-    SAVE_DIR = Path.home() / "Documents" / "personal-text-game" / "saves"
+    DEFAULT_SAVE_DIR = Path.home() / "Documents" / "caves_of_steel" / "saves"
+    CONFIG_FILE = Path.home() / "Documents" / "caves_of_steel" / "game_config.json"
     
-    def __init__(self):
-        """Initialize save system."""
+    def __init__(self, custom_save_dir=None):
+        """Initialize save system.
+        
+        Args:
+            custom_save_dir: Optional custom save directory path
+        """
+        if custom_save_dir:
+            self.SAVE_DIR = Path(custom_save_dir)
+        else:
+            self.SAVE_DIR = self.DEFAULT_SAVE_DIR
+        
         self.SAVE_DIR.mkdir(parents=True, exist_ok=True)
     
     def save_game(self, player, game_state, filename=None):
@@ -118,3 +128,41 @@ class SaveSystem:
             return False
         except OSError:
             return False
+    
+    @staticmethod
+    def save_config(save_dir):
+        """Save the save directory configuration.
+        
+        Args:
+            save_dir: Path to save directory
+        """
+        SaveSystem.CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        config = {"save_dir": str(save_dir)}
+        with open(SaveSystem.CONFIG_FILE, 'w') as f:
+            json.dump(config, f, indent=2)
+    
+    @staticmethod
+    def load_config():
+        """Load the save directory configuration.
+        
+        Returns:
+            str: Path to save directory, or None if not configured
+        """
+        if not SaveSystem.CONFIG_FILE.exists():
+            return None
+        
+        try:
+            with open(SaveSystem.CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                return config.get("save_dir")
+        except (json.JSONDecodeError, IOError):
+            return None
+    
+    @staticmethod
+    def is_first_launch():
+        """Check if this is the first launch of the game.
+        
+        Returns:
+            bool: True if first launch (no config file), False otherwise
+        """
+        return not SaveSystem.CONFIG_FILE.exists()
