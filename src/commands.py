@@ -3,15 +3,14 @@ Command Processor - Handles player commands
 """
 
 from src.locations import LOCATIONS
-from src.utils import print_separator
 
 
 class CommandProcessor:
     """Processes and executes player commands."""
-    
+
     def __init__(self, player, game_state):
         """Initialize command processor.
-        
+
         Args:
             player: Player object
             game_state: GameState object
@@ -41,80 +40,100 @@ class CommandProcessor:
             "puzzle": self.cmd_puzzle,
             "settings": self.cmd_settings,
         }
-    
+
     def process(self, command_string):
         """Process a player command.
-        
+
         Args:
             command_string: The command string from the player
         """
         parts = command_string.split(maxsplit=1)
         if not parts:
             return
-        
+
         command = parts[0].lower()
         args = parts[1] if len(parts) > 1 else ""
-        
+
         if command in self.commands:
             self.commands[command](args)
         else:
-            print(f"\n❌ Unknown command: '{command}'. Type 'help' for available commands.\n")
-    
+            print(
+                f"\n❌ Unknown command: '{command}'. Type 'help' for available commands.\n"
+            )
+
     def cmd_look(self, args):
         """Look command - examine current surroundings."""
         print(f"\n{self.player.get_status()}\n")
-    
+
     def cmd_go(self, args):
         """Go/move command - move to another location.
-        
+
         Args:
             args: Direction or location name
         """
         if not args:
             print("\n❌ Go where? Please specify a direction or location.\n")
             return
-        
+
         args = args.lower().strip()
         location = LOCATIONS.get(self.player.current_location)
-        
-        if args not in location.exits:
-            print(f"\n❌ You can't go {args} from here.\n")
-            print(f"Available exits: {', '.join(location.exits.keys())}\n")
+        if not location:
+            print("\n❌ Current location data is missing. You cannot move right now.\n")
             return
-        
+
+        exits = getattr(location, "exits", {}) or {}
+        if args not in exits:
+            print(f"\n❌ You can't go {args} from here.\n")
+            if exits:
+                print(f"Available exits: {', '.join(exits.keys())}\n")
+            else:
+                print("There are no obvious exits from here.\n")
+            return
+
         new_location = location.exits[args]
         self.player.current_location = new_location
         self.game_state.visited_locations.add(new_location)
         print(f"\n✅ You move {args}...\n")
-    
+
     def cmd_examine(self, args):
         """Examine command - look closely at something.
-        
+
         Args:
             args: What to examine
         """
         if not args:
             print("\n❌ Examine what? Please specify.\n")
             return
-        
+
         args = args.lower().strip()
         location = LOCATIONS.get(self.player.current_location)
-        
+        if not location:
+            print("\n❌ Current location data is missing. Nothing to examine here.\n")
+            return
+
+        loc_items = location.items or []
+        loc_npcs = location.npcs or []
+
         # Check items in location
-        if args in [item.lower() for item in location.items]:
+        if args in [item.lower() for item in loc_items]:
             self._examine_item(args)
             return
-        
+
         # Check NPCs
-        if args in [npc.lower() for npc in location.npcs]:
+        if args in [npc.lower() for npc in loc_npcs]:
             self._examine_npc(args)
             return
-        
+
+        # Check inventory (allow examining items you've picked up)
+        if args in [item.lower() for item in self.player.inventory.keys()]:
+            self._examine_item(args)
+            return
+
         print(f"\n❌ You don't see '{args}' here.\n")
-    
+
     def _examine_item(self, item):
         """Examine an item at current location.
-        
+
         Args:
             item: Item name
         """
@@ -127,13 +146,13 @@ class CommandProcessor:
             "citizen_records": "Vast databases of every citizen in the Caves. Where do you start?",
             "nutrition_pack": "Standard nutrition rations. Efficient, but utterly flavorless.",
         }
-        
+
         examination = examinations.get(item, f"You examine the {item} carefully.")
         print(f"\n🔍 {examination}\n")
-    
+
     def _examine_npc(self, npc):
         """Examine an NPC.
-        
+
         Args:
             npc: NPC name
         """
@@ -150,37 +169,41 @@ class CommandProcessor:
             "dispensary attendant": "An employee mindlessly restocking nutrition dispensers.",
             "scene officer": "A forensic officer still collecting evidence.",
         }
-        
+
         description = descriptions.get(npc.lower(), f"You observe {npc} carefully.")
         print(f"\n👤 {description}\n")
-    
+
     def cmd_talk(self, args):
         """Talk command - speak to an NPC.
-        
+
         Args:
             args: Who to talk to
         """
         if not args:
             print("\n❌ Talk to whom? Specify an NPC.\n")
             return
-        
+
         args = args.lower().strip()
         location = LOCATIONS.get(self.player.current_location)
-        
-        if args not in [npc.lower() for npc in location.npcs]:
+        if not location:
+            print("\n❌ Current location data is missing. No one to talk to.\n")
+            return
+
+        loc_npcs = location.npcs or []
+        if args not in [npc.lower() for npc in loc_npcs]:
             print(f"\n❌ '{args}' isn't here.\n")
             return
-        
+
         self._dialogue(args)
-    
+
     def _dialogue(self, npc):
         """Handle dialogue with an NPC.
-        
+
         Args:
             npc: NPC name (lowercase)
         """
         self.player.met_characters.add(npc)
-        
+
         dialogues = {
             "r. daneel olivaw": """
         R. Daneel Olivaw regards you with those unblinking robotic eyes.
@@ -213,7 +236,7 @@ class CommandProcessor:
         What information do you seek?
         """,
         }
-        
+
         dialogue = dialogues.get(npc, f"You talk with {npc}.")
         # Replace address 'Detective' with the player's actual name for immersion
         try:
@@ -222,95 +245,128 @@ class CommandProcessor:
             pname = "Detective"
         dialogue = dialogue.replace("Detective", pname).replace("detective", pname)
         print(f"\n💬 {dialogue}\n")
-    
+
     def cmd_inventory(self, args):
         """Inventory command - show what player is carrying."""
-        print(f"\n📦 INVENTORY:\n")
+        print("\n📦 INVENTORY:\n")
         if not self.player.inventory:
             print("You're not carrying anything.\n")
             return
-        
+
         for item, quantity in self.player.inventory.items():
             print(f"  • {item} x{quantity}")
         print()
-    
+
     def cmd_take(self, args):
         """Take command - pick up an item or all items.
-        
+
         Args:
             args: What to take (or "all")
         """
         if not args:
             print("\n❌ Take what? Please specify (or 'take all').\n")
             return
-        
+
         args = args.lower().strip()
         location = LOCATIONS.get(self.player.current_location)
-        
+        if not location:
+            print(
+                "\n❌ Current location data is missing. You can't take items right now.\n"
+            )
+            return
+
+        loc_items = location.items or []
+
         if args == "all":
-            if not location.items:
+            if not loc_items:
                 print("\n❌ There are no items here to take.\n")
                 return
-            
+
             items_taken = []
-            for item in location.items[:]:  # Create a copy to iterate safely
+            for item in list(loc_items):  # Create a copy to iterate safely
                 self.player.add_item(item)
                 items_taken.append(item)
-            
-            location.items.clear()
+
+            # Clear stored items on the location (ensure list exists)
+            if location.items is None:
+                location.items = []
+            else:
+                location.items.clear()
+
             items_str = ", ".join(items_taken)
             print(f"\n✅ You take all items: {items_str}.\n")
             return
-        
-        if args not in [item.lower() for item in location.items]:
+
+        if args not in [item.lower() for item in loc_items]:
             print(f"\n❌ You don't see '{args}' here.\n")
             return
-        
+
         # Find the actual item name (with correct case)
-        actual_item = next(item for item in location.items if item.lower() == args)
+        actual_item = next(item for item in loc_items if item.lower() == args)
         self.player.add_item(actual_item)
-        location.items.remove(actual_item)
+        # Remove from the underlying location.items if present
+        if location.items is None:
+            location.items = []
+        if actual_item in location.items:
+            location.items.remove(actual_item)
         print(f"\n✅ You take the {actual_item}.\n")
-    
+
     def cmd_drop(self, args):
         """Drop command - drop an item or all items from inventory.
-        
+
         Args:
             args: What to drop (or "all")
         """
         if not args:
             print("\n❌ Drop what? Please specify (or 'drop all').\n")
             return
-        
+
         args = args.lower().strip()
-        
+
         if args == "all":
             if not self.player.inventory:
                 print("\n❌ You're not carrying anything.\n")
                 return
-            
+
             items_dropped = []
             location = LOCATIONS.get(self.player.current_location)
-            
+            if not location:
+                print(
+                    "\n❌ Current location data is missing. You can't drop items here.\n"
+                )
+                return
+
+            if location.items is None:
+                location.items = []
+
             for item in list(self.player.inventory.keys()):
                 quantity = self.player.inventory[item]
                 location.items.append(item)
                 items_dropped.append(f"{item} x{quantity}")
-            
+
             self.player.inventory.clear()
             items_str = ", ".join(items_dropped)
             print(f"\n✅ You drop all items: {items_str}.\n")
             return
-        
+
         if not self.player.has_item(args):
             print(f"\n❌ You don't have '{args}'.\n")
             return
-        
+
         self.player.remove_item(args)
         location = LOCATIONS.get(self.player.current_location)
+        if not location:
+            print(
+                "\n❌ Current location data is missing. Dropped item lost to the void.\n"
+            )
+            return
+
+        if location.items is None:
+            location.items = []
+
         location.items.append(args)
         print(f"\n✅ You drop the {args}.\n")
-    
+
     def cmd_status(self, args):
         """Status command - show detailed player and game status."""
         print(self.player.get_status())
@@ -320,7 +376,7 @@ class CommandProcessor:
             for i, clue in enumerate(self.player.clues_found, 1):
                 print(f"   {i}. {clue}")
         print()
-    
+
     def cmd_stats(self, args):
         """Stats command - show quick statistics."""
         print("\n" + "=" * 50)
@@ -331,10 +387,12 @@ class CommandProcessor:
         print(f"Investigation Points: {self.player.investigation_points}")
         print(f"Clues Found: {len(self.player.clues_found)}")
         print(f"Energy Level: {self.player.energy}%")
-        print(f"Day: {self.game_state.day} - {self.game_state.time_period.capitalize()}")
+        print(
+            f"Day: {self.game_state.day} - {self.game_state.time_period.capitalize()}"
+        )
         print(f"Locations Visited: {len(self.game_state.visited_locations)}")
         print("=" * 50 + "\n")
-    
+
     def cmd_help(self, args):
         """Help command - show available commands."""
         help_text = """
@@ -378,7 +436,7 @@ class CommandProcessor:
         ╚════════════════════════════════════════════════════════════╝
         """
         print(help_text)
-    
+
     def cmd_mystery(self, args):
         """Show mystery details and suspects."""
         print(self.game_state.mystery.get_mystery_summary())
@@ -386,27 +444,29 @@ class CommandProcessor:
         for suspect_name in self.game_state.mystery.suspects.keys():
             print(f"  • {suspect_name}")
         print()
-    
+
     def cmd_accuse(self, args):
         """Accuse someone of the murder.
-        
+
         Args:
             args: Name of person to accuse
         """
         if not args:
             print("\n❌ Accuse whom? Be specific.\n")
             return
-        
+
         args = args.strip().title()
-        
+
         # Check if they have enough evidence
         can_accuse, remaining = self.game_state.mystery.can_accuse(self.player)
         if not can_accuse:
-            print(f"\n❌ You don't have enough evidence yet. You need {remaining} more clue(s).\n")
+            print(
+                f"\n❌ You don't have enough evidence yet. You need {remaining} more clue(s).\n"
+            )
             return
-        
+
         result = self.game_state.mystery.check_solution(args)
-        
+
         if result["correct"]:
             print(f"\n✅ {result['message']}")
             print(f"Motive: {result['explanation']}\n")
@@ -414,14 +474,14 @@ class CommandProcessor:
         else:
             print(f"\n❌ {result['message']}")
             print(f"{result['explanation']}\n")
-    
+
     def cmd_relationships(self, args):
         """Show relationships with all NPCs."""
         print(self.game_state.relationships.get_all_relationships())
-    
+
     def cmd_puzzle(self, args):
         """Attempt to solve a puzzle or get hint.
-        
+
         Args:
             args: Puzzle ID or answer
         """
@@ -430,10 +490,10 @@ class CommandProcessor:
             solved, total = self.game_state.puzzle_manager.get_solved_puzzles()
             print(f"Puzzles solved: {solved}/{total}\n")
             return
-        
+
         parts = args.split(maxsplit=1)
         puzzle_id = parts[0].lower()
-        
+
         if len(parts) == 1:
             # Get hint
             hint = self.game_state.puzzle_manager.get_hint(puzzle_id)
@@ -442,14 +502,14 @@ class CommandProcessor:
             # Attempt solution
             answer = parts[1]
             result = self.game_state.puzzle_manager.solve_puzzle(puzzle_id, answer)
-            
+
             if result["success"]:
                 print(f"\n{result['message']}")
                 self.player.investigation_points += result.get("reward", 0)
                 print(f"Investigation points +{result.get('reward', 0)}!\n")
             else:
                 print(f"\n{result['message']}\n")
-    
+
     def cmd_settings(self, args):
         """Settings command - view and manage game settings."""
         print("\n" + "=" * 50)
@@ -457,15 +517,15 @@ class CommandProcessor:
         print("=" * 50)
         print(f"\nPlayer Name: {self.player.name}")
         print(f"Difficulty: {self.player.difficulty.capitalize()}")
-        print(f"\nAvailable options:")
+        print("\nAvailable options:")
         print("  settings name <new_name> - Change your detective name")
         print("  settings show            - Show all settings")
         print("  settings close           - Close settings menu\n")
-        
+
         if args:
             parts = args.split(maxsplit=1)
             option = parts[0].lower()
-            
+
             if option == "name" and len(parts) > 1:
                 new_name = parts[1]
                 if len(new_name) > 30:
@@ -473,7 +533,9 @@ class CommandProcessor:
                 else:
                     old_name = self.player.name
                     self.player.name = new_name
-                    print(f"✓ Detective name changed from '{old_name}' to '{new_name}'\n")
+                    print(
+                        f"✓ Detective name changed from '{old_name}' to '{new_name}'\n"
+                    )
             elif option == "show":
                 print("\n📋 CURRENT GAME SETTINGS:")
                 print(f"  Detective Name: {self.player.name}")
@@ -487,5 +549,3 @@ class CommandProcessor:
                 print("Closing settings menu.\n")
             else:
                 print("❌ Unknown settings option.\n")
-
-
