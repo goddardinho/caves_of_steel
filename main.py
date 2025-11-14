@@ -55,6 +55,49 @@ def prompt_for_save_path():
             print("❌ Invalid choice. Please enter 1 or 2.\n")
 
 
+def prompt_for_player_name():
+    """Prompt user to enter their detective name.
+    
+    Returns:
+        str: Player name
+    """
+    while True:
+        name = input("\nEnter your detective name (or press Enter for 'Elijah Bailey'): ").strip()
+        if not name:
+            name = "Elijah Bailey"
+        if len(name) > 30:
+            print("❌ Name too long (max 30 characters). Please try again.")
+            continue
+        return name
+
+
+def prompt_for_difficulty():
+    """Prompt user to select game difficulty.
+    
+    Returns:
+        str: Difficulty level (easy, normal, hard)
+    """
+    print("\nSelect difficulty level:\n")
+    print("1. Easy    - More clues, relaxed time limits, helpful hints")
+    print("2. Normal  - Balanced gameplay (recommended)")
+    print("3. Hard    - Fewer clues, strict time limits, challenging puzzles")
+    
+    while True:
+        choice = input("\nEnter your choice (1-3): ").strip()
+        
+        if choice == "1":
+            print("✓ Difficulty set to Easy\n")
+            return "easy"
+        elif choice == "2":
+            print("✓ Difficulty set to Normal\n")
+            return "normal"
+        elif choice == "3":
+            print("✓ Difficulty set to Hard\n")
+            return "hard"
+        else:
+            print("❌ Invalid choice. Please enter 1, 2, or 3.\n")
+
+
 def main():
     """Main entry point for the game."""
     # Check if first launch and prompt for save path
@@ -68,11 +111,17 @@ def main():
     print("THE CAVES OF STEEL")
     print("A Text Adventure Game")
     print("Based on Isaac Asimov's Classic Novel")
-    print("=" * 60 + "\n")
+    print("=" * 60)
+    
+    # Prompt for player name and difficulty
+    player_name = prompt_for_player_name()
+    difficulty = prompt_for_difficulty()
     
     # Initialize game
-    player = Player("Detective", starting_location="bedroom")
-    game_state = GameState()
+    player = Player(player_name,
+                    starting_location="bedroom",
+                    difficulty=difficulty)
+    game_state = GameState(difficulty=difficulty)
     engine = GameEngine(player, game_state, save_dir)
     
     # Start the game

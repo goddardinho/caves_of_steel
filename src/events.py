@@ -52,7 +52,7 @@ class EventManager:
         # Day 1 Events
         self.events.append(TimedEvent(
             "murder_discovery",
-            "You receive urgent notification: Dr. Rimbauer has been found dead!",
+            "You receive urgent notification: Dr. Roj Nemennuh Sarton has been found dead!",
             "morning",
             1
         ))
@@ -66,7 +66,7 @@ class EventManager:
         
         self.events.append(TimedEvent(
             "first_lead",
-            "A witness comes forward with information about seeing someone enter Rimbauer's apartment.",
+            "A witness comes forward with information about seeing someone enter Sarton's apartment.",
             "evening",
             1
         ))
@@ -88,7 +88,7 @@ class EventManager:
         
         self.events.append(TimedEvent(
             "conspiracy_hint",
-            "You receive an anonymous message: 'The robots are involved. Rimbauer discovered something dangerous.'",
+            "You receive an anonymous message: 'The robots are involved. Sarton discovered something dangerous.'",
             "evening",
             2
         ))

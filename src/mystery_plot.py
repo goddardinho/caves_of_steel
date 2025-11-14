@@ -28,7 +28,7 @@ class VictimProfile:
     
     def __init__(self):
         """Initialize victim profile."""
-        self.name = "Dr. Alfred Rimbauer"
+        self.name = "Dr. Roj Nemennuh Sarton"
         self.occupation = "Robotics Specialist"
         self.last_seen = "Commissioner's Office at 14:00"
         self.time_of_death = "between 14:30 and 16:00"
@@ -45,7 +45,7 @@ class MysteryPlot:
         self.victim = VictimProfile()
         self.suspects = self._create_suspects()
         self.actual_killer = "Commander Lije Bailey"  # The culprit
-        self.murder_motive = "Rimbauer discovered that certain robots were being secretly modified for dangerous purposes"
+        self.murder_motive = "Sarton discovered that certain robots were being secretly modified for dangerous purposes"
         self.revelation_stage = 0  # 0: hidden, 1: partially revealed, 2: fully revealed
     
     def _create_suspects(self):
@@ -57,13 +57,13 @@ class MysteryPlot:
         return {
             "Commissioner": Suspect(
                 name="Commissioner",
-                motive="Feared Rimbauer's findings would expose his negligence",
+                motive="Feared Sarton's findings would expose his negligence",
                 alibi="Claims he was in his office all afternoon",
                 guilty=False
             ),
             "Records Clerk": Suspect(
                 name="Records Clerk",
-                motive="Recently had a dispute with Rimbauer about data access",
+                motive="Recently had a dispute with Sarton about data access",
                 alibi="Claims they were processing files in Records",
                 guilty=False
             ),

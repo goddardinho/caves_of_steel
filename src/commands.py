@@ -33,11 +33,13 @@ class CommandProcessor:
             "get": self.cmd_take,
             "drop": self.cmd_drop,
             "status": self.cmd_status,
+            "stats": self.cmd_stats,
             "help": self.cmd_help,
             "accuse": self.cmd_accuse,
             "relationships": self.cmd_relationships,
             "mystery": self.cmd_mystery,
             "puzzle": self.cmd_puzzle,
+            "settings": self.cmd_settings,
         }
     
     def process(self, command_string):
@@ -213,6 +215,12 @@ class CommandProcessor:
         }
         
         dialogue = dialogues.get(npc, f"You talk with {npc}.")
+        # Replace address 'Detective' with the player's actual name for immersion
+        try:
+            pname = self.player.name
+        except Exception:
+            pname = "Detective"
+        dialogue = dialogue.replace("Detective", pname).replace("detective", pname)
         print(f"\n💬 {dialogue}\n")
     
     def cmd_inventory(self, args):
@@ -313,6 +321,20 @@ class CommandProcessor:
                 print(f"   {i}. {clue}")
         print()
     
+    def cmd_stats(self, args):
+        """Stats command - show quick statistics."""
+        print("\n" + "=" * 50)
+        print("QUICK STATS")
+        print("=" * 50)
+        print(f"Detective: {self.player.name}")
+        print(f"Difficulty: {self.player.difficulty.capitalize()}")
+        print(f"Investigation Points: {self.player.investigation_points}")
+        print(f"Clues Found: {len(self.player.clues_found)}")
+        print(f"Energy Level: {self.player.energy}%")
+        print(f"Day: {self.game_state.day} - {self.game_state.time_period.capitalize()}")
+        print(f"Locations Visited: {len(self.game_state.visited_locations)}")
+        print("=" * 50 + "\n")
+    
     def cmd_help(self, args):
         """Help command - show available commands."""
         help_text = """
@@ -340,7 +362,12 @@ class CommandProcessor:
         ║ INFORMATION:                                               ║
         ║   inventory (i)     Show what you're carrying            ║
         ║   status            Show detective status & clues         ║
+        ║   stats             Show quick statistics                ║
         ║   help              Show this help message                ║
+        ║                                                            ║
+        ║ SETTINGS:                                                  ║
+        ║   settings          Open settings menu                   ║
+        ║   settings name     Change your detective name           ║
         ║                                                            ║
         ║ SAVE/LOAD:                                                 ║
         ║   save (s)          Save your game progress              ║
@@ -422,4 +449,43 @@ class CommandProcessor:
                 print(f"Investigation points +{result.get('reward', 0)}!\n")
             else:
                 print(f"\n{result['message']}\n")
+    
+    def cmd_settings(self, args):
+        """Settings command - view and manage game settings."""
+        print("\n" + "=" * 50)
+        print("GAME SETTINGS")
+        print("=" * 50)
+        print(f"\nPlayer Name: {self.player.name}")
+        print(f"Difficulty: {self.player.difficulty.capitalize()}")
+        print(f"\nAvailable options:")
+        print("  settings name <new_name> - Change your detective name")
+        print("  settings show            - Show all settings")
+        print("  settings close           - Close settings menu\n")
+        
+        if args:
+            parts = args.split(maxsplit=1)
+            option = parts[0].lower()
+            
+            if option == "name" and len(parts) > 1:
+                new_name = parts[1]
+                if len(new_name) > 30:
+                    print("❌ Name too long (max 30 characters)\n")
+                else:
+                    old_name = self.player.name
+                    self.player.name = new_name
+                    print(f"✓ Detective name changed from '{old_name}' to '{new_name}'\n")
+            elif option == "show":
+                print("\n📋 CURRENT GAME SETTINGS:")
+                print(f"  Detective Name: {self.player.name}")
+                print(f"  Difficulty Level: {self.player.difficulty.capitalize()}")
+                print(f"  Current Location: {self.player.current_location}")
+                print(f"  Investigation Points: {self.player.investigation_points}")
+                print(f"  Energy: {self.player.energy}%")
+                print(f"  Day: {self.game_state.day}")
+                print(f"  Time of Day: {self.game_state.time_period.capitalize()}\n")
+            elif option == "close":
+                print("Closing settings menu.\n")
+            else:
+                print("❌ Unknown settings option.\n")
+
 

@@ -49,6 +49,7 @@ class SaveSystem:
             "player": {
                 "name": player.name,
                 "current_location": player.current_location,
+                "difficulty": player.difficulty,
                 "inventory": player.inventory,
                 "energy": player.energy,
                 "investigation_points": player.investigation_points,
@@ -56,6 +57,7 @@ class SaveSystem:
                 "clues_found": player.clues_found,
             },
             "game_state": {
+                "difficulty": game_state.difficulty,
                 "time_period": game_state.time_period,
                 "day": game_state.day,
                 "case_solved": game_state.case_solved,
