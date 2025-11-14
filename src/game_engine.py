@@ -11,17 +11,18 @@ from src.save_system import SaveSystem
 class GameEngine:
     """Main game engine that handles the core game loop."""
     
-    def __init__(self, player, game_state):
+    def __init__(self, player, game_state, save_dir=None):
         """Initialize the game engine.
         
         Args:
             player: Player object
             game_state: GameState object
+            save_dir: Optional custom save directory path
         """
         self.player = player
         self.game_state = game_state
         self.command_processor = CommandProcessor(player, game_state)
-        self.save_system = SaveSystem()
+        self.save_system = SaveSystem(save_dir)
         self.running = True
     
     def run(self):
