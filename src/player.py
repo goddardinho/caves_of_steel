@@ -6,15 +6,17 @@ Player class - Represents the player character
 class Player:
     """Represents the player character."""
     
-    def __init__(self, name, starting_location):
+    def __init__(self, name, starting_location, difficulty="normal"):
         """Initialize the player.
         
         Args:
             name: Player's name
             starting_location: Starting location key
+            difficulty: Game difficulty (easy, normal, hard)
         """
         self.name = name
         self.current_location = starting_location
+        self.difficulty = difficulty
         self.inventory = {}
         self.energy = 100
         self.investigation_points = 0
@@ -83,6 +85,7 @@ class Player:
         status = f"""
         ┌─ DETECTIVE STATUS ─────────────────────┐
         │ Name: {self.name}
+        │ Difficulty: {self.difficulty.capitalize()}
         │ Location: {self.current_location}
         │ Energy: {self.energy}%
         │ Investigation Points: {self.investigation_points}

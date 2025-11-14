@@ -115,7 +115,7 @@ class DialogueManager:
             "Commissioner",
             """The Commissioner looks at you seriously.
 
-"We have a serious matter. Dr. Rimbauer was found dead in his apartment.
+"We have a serious matter. Dr. Roj Nemennuh Sarton was found dead in his apartment.
 You're assigned to investigate. However, I'm also assigning you a robot
 partner. His name is R. Daneel Olivaw. I know you won't like it, but
 this is non-negotiable."
@@ -191,7 +191,7 @@ What do you say?"""
             """The Records Clerk looks tired, surrounded by data terminals
 and filing systems.
 
-"Detective. I heard about Dr. Rimbauer. Tragic. He was here often,
+"Detective. I heard about Dr. Roj Nemennuh Sarton. Tragic. He was here often,
 researching... well, things. Can I help you find something specific?"
 
 What do you need?"""
@@ -202,7 +202,7 @@ What do you need?"""
             relationship_impact=10
         ))
         start_node.add_choice(DialogueChoice(
-            "Records on Dr. Rimbauer's research.",
+            "Records on Dr. Sarton's research.",
             relationship_impact=15
         ))
         start_node.add_choice(DialogueChoice(

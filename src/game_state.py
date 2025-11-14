@@ -13,8 +13,13 @@ from src.dialogue_system import DialogueManager
 class GameState:
     """Manages the overall state of the game world."""
     
-    def __init__(self):
-        """Initialize game state."""
+    def __init__(self, difficulty="normal"):
+        """Initialize game state.
+        
+        Args:
+            difficulty: Game difficulty (easy, normal, hard)
+        """
+        self.difficulty = difficulty
         self.time_period = "morning"  # morning, afternoon, evening, night
         self.day = 1
         self.case_solved = False

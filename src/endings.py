@@ -171,6 +171,14 @@ THE CASE REMAINS UNSOLVED.""",
         """
         final_score = player.investigation_points + ending.score_bonus
         
+        # Personalize any references to 'Detective' in the ending text
+        try:
+            pname = player.name
+        except Exception:
+            pname = "Detective"
+
+        ending_text = ending.description.replace("Detective", pname).replace("detective", pname)
+
         display = f"""
         ╔═══════════════════════════════════════════════════════════╗
         ║                     GAME OVER                             ║
@@ -180,7 +188,7 @@ THE CASE REMAINS UNSOLVED.""",
         ║                                                           ║
         ╠═══════════════════════════════════════════════════════════╣
         
-        {ending.description}
+        {ending_text}
         
         ╠═══════════════════════════════════════════════════════════╣
         ║                  INVESTIGATION COMPLETE                  ║

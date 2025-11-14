@@ -195,7 +195,7 @@ class GameEngine:
             
             # Specific event handling
             if event.event_id == "murder_discovery":
-                self.player.add_clue("Dr. Rimbauer, a robotics specialist, has been murdered")
+                self.player.add_clue("Dr. Roj Nemennuh Sarton, a robotics specialist, has been murdered")
             elif event.event_id == "partner_assignment":
                 self.game_state.partner_assigned = True
                 self.player.add_clue("Assigned humanoid robot partner R. Daneel Olivaw")
@@ -220,5 +220,9 @@ class GameEngine:
     def quit_game(self):
         """Handle game quit."""
         print("\nThank you for playing The Caves of Steel!")
-        print("Goodbye, Detective.\n")
+        try:
+            name = self.player.name
+        except Exception:
+            name = "Detective"
+        print(f"Goodbye, {name}.\n")
         self.running = False
