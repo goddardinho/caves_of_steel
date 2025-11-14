@@ -5,10 +5,10 @@ Locations - Game world locations and map
 
 class Location:
     """Represents a location in the game world."""
-    
+
     def __init__(self, name, description, exits=None, npcs=None, items=None):
         """Initialize a location.
-        
+
         Args:
             name: Location name
             description: Location description
@@ -35,9 +35,9 @@ LOCATIONS = {
         a constant background presence.
         """,
         exits={"corridor": "corridor_residential"},
-        items=["notebook", "communication_device"]
+        npcs=["R. Daneel Olivaw"],
+        items=["notebook", "communication_device"],
     ),
-    
     "corridor_residential": Location(
         name="Residential Corridor",
         description="""
@@ -50,12 +50,11 @@ LOCATIONS = {
         exits={
             "quarters": "bedroom",
             "plaza": "central_plaza",
-            "administrative": "administrative_section"
+            "administrative": "administrative_section",
         },
         npcs=["Neighbor"],
-        items=[]
+        items=[],
     ),
-    
     "central_plaza": Location(
         name="Central Plaza",
         description="""
@@ -69,12 +68,11 @@ LOCATIONS = {
             "residential": "corridor_residential",
             "administrative": "administrative_section",
             "police": "police_headquarters",
-            "food_dispensary": "food_dispensary"
+            "food_dispensary": "food_dispensary",
         },
         npcs=["City Official", "Street Vendor"],
-        items=[]
+        items=[],
     ),
-    
     "police_headquarters": Location(
         name="Police Headquarters",
         description="""
@@ -86,9 +84,8 @@ LOCATIONS = {
         """,
         exits={"plaza": "central_plaza", "commissioner_office": "commissioner_office"},
         npcs=["Commander", "Desk Officer"],
-        items=["case_files"]
+        items=["case_files"],
     ),
-    
     "commissioner_office": Location(
         name="Commissioner's Office",
         description="""
@@ -100,9 +97,8 @@ LOCATIONS = {
         """,
         exits={"headquarters": "police_headquarters"},
         npcs=["Commissioner", "R. Daneel Olivaw"],
-        items=[]
+        items=[],
     ),
-    
     "administrative_section": Location(
         name="Administrative Section",
         description="""
@@ -112,14 +108,10 @@ LOCATIONS = {
         recycled air is stronger here, along with the faint sound of
         electronic humming.
         """,
-        exits={
-            "plaza": "central_plaza",
-            "records": "records_office"
-        },
+        exits={"plaza": "central_plaza", "records": "records_office"},
         npcs=["Administrator"],
-        items=[]
+        items=[],
     ),
-    
     "records_office": Location(
         name="Records Office",
         description="""
@@ -130,9 +122,8 @@ LOCATIONS = {
         """,
         exits={"admin": "administrative_section"},
         npcs=["Records Clerk"],
-        items=["citizen_records"]
+        items=["citizen_records"],
     ),
-    
     "food_dispensary": Location(
         name="Food Dispensary",
         description="""
@@ -143,9 +134,8 @@ LOCATIONS = {
         """,
         exits={"plaza": "central_plaza"},
         npcs=["Dispensary Attendant"],
-        items=["nutrition_pack"]
+        items=["nutrition_pack"],
     ),
-    
     "crime_scene": Location(
         name="Murder Crime Scene",
         description="""
@@ -157,6 +147,6 @@ LOCATIONS = {
         """,
         exits={"residential": "corridor_residential"},
         npcs=["Scene Officer"],
-        items=["forensic_evidence", "personal_effects"]
-    )
+        items=["forensic_evidence", "personal_effects"],
+    ),
 }

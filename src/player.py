@@ -5,10 +5,10 @@ Player class - Represents the player character
 
 class Player:
     """Represents the player character."""
-    
+
     def __init__(self, name, starting_location, difficulty="normal"):
         """Initialize the player.
-        
+
         Args:
             name: Player's name
             starting_location: Starting location key
@@ -22,10 +22,10 @@ class Player:
         self.investigation_points = 0
         self.met_characters = set()
         self.clues_found = []
-    
+
     def add_item(self, item, quantity=1):
         """Add item to inventory.
-        
+
         Args:
             item: Item name
             quantity: Quantity to add
@@ -34,51 +34,51 @@ class Player:
             self.inventory[item] += quantity
         else:
             self.inventory[item] = quantity
-    
+
     def remove_item(self, item, quantity=1):
         """Remove item from inventory.
-        
+
         Args:
             item: Item name
             quantity: Quantity to remove
-            
+
         Returns:
             bool: True if successful, False otherwise
         """
         if item not in self.inventory:
             return False
-        
+
         if self.inventory[item] <= quantity:
             del self.inventory[item]
         else:
             self.inventory[item] -= quantity
-        
+
         return True
-    
+
     def has_item(self, item):
         """Check if player has an item.
-        
+
         Args:
             item: Item name
-            
+
         Returns:
             bool: True if player has item
         """
         return item in self.inventory and self.inventory[item] > 0
-    
+
     def add_clue(self, clue):
         """Record a clue found during investigation.
-        
+
         Args:
             clue: Clue description
         """
         if clue not in self.clues_found:
             self.clues_found.append(clue)
             self.investigation_points += 10
-    
+
     def get_status(self):
         """Get player status as a formatted string.
-        
+
         Returns:
             str: Player status
         """
