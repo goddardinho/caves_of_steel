@@ -35,7 +35,7 @@ LOCATIONS = {
         a constant background presence.
         """,
         exits={"corridor": "corridor_residential"},
-        npcs=["R. Daneel Olivaw"],
+        npcs=["R. Daneel Olivaw", "Jessie Bailey", "Ben Bailey"],
         items=["notebook", "communication_device"],
     ),
     "corridor_residential": Location(
@@ -82,8 +82,8 @@ LOCATIONS = {
         ozone and determination fills the air. This is where justice
         in the Caves of Steel is dispensed.
         """,
-        exits={"plaza": "central_plaza", "commissioner_office": "commissioner_office"},
-        npcs=["Commander", "Desk Officer"],
+        exits={"plaza": "central_plaza", "commissioner_office": "commissioner_office", "robot_division": "robot_division", "detention": "detention_block"},
+        npcs=["Commander Lije Bailey", "Desk Officer", "Vince Barrett"],
         items=["case_files"],
     ),
     "commissioner_office": Location(
@@ -92,12 +92,12 @@ LOCATIONS = {
         A stark, austere office with minimal furnishings. A large desk
         dominates the room, and pictures of past commissioners adorn
         the walls. A robot stands silently in the corner - R. Daneel
-        Olivaw, your new partner. The commissioner seems displeased
-        about the robot assignment.
+        Olivaw, your new partner. On the desk, you notice a pair of
+        eyeglasses in a repair case — they appear to have broken lenses.
         """,
         exits={"headquarters": "police_headquarters"},
-        npcs=["Commissioner", "R. Daneel Olivaw"],
-        items=[],
+        npcs=["Julius Enderby", "R. Daneel Olivaw"],
+        items=["eyeglass_evidence", "case_files"],
     ),
     "administrative_section": Location(
         name="Administrative Section",
@@ -108,7 +108,7 @@ LOCATIONS = {
         recycled air is stronger here, along with the faint sound of
         electronic humming.
         """,
-        exits={"plaza": "central_plaza", "records": "records_office"},
+        exits={"plaza": "central_plaza", "records": "records_office", "lab": "robotics_lab"},
         npcs=["Administrator"],
         items=[],
     ),
@@ -148,5 +148,53 @@ LOCATIONS = {
         exits={"residential": "corridor_residential"},
         npcs=["Scene Officer"],
         items=["forensic_evidence", "personal_effects"],
+    ),
+    "robot_division": Location(
+        name="Robot Division",
+        description="""
+        A specialized wing of the police headquarters dedicated to
+        robot operations and integration. Advanced terminals and
+        diagnostic equipment line the walls. R. Sammy, a robot,
+        works here processing data and assisting with investigations.
+        """,
+        exits={"headquarters": "police_headquarters"},
+        npcs=["R. Sammy"],
+        items=[],
+    ),
+    "spacer_embassy": Location(
+        name="Spacer Embassy",
+        description="""
+        An elegant facility representing the interests of Earth's
+        spacer colonies and allies. The air here feels different—cleaner,
+        more controlled. Advanced technology lines the walls. Han Fastolfe,
+        a roboticist from Aurora, conducts diplomatic and scientific work here.
+        """,
+        exits={"plaza": "central_plaza"},
+        npcs=["Han Fastolfe"],
+        items=[],
+    ),
+    "robotics_lab": Location(
+        name="Robotics Research Laboratory",
+        description="""
+        A state-of-the-art laboratory filled with equipment for
+        studying and constructing robots. Dr. Anthony Gerrigel works
+        here, conducting cutting-edge research into humaniform robotics
+        and artificial intelligence. The hum of machinery is constant.
+        """,
+        exits={"admin": "administrative_section"},
+        npcs=["Dr. Anthony Gerrigel"],
+        items=[],
+    ),
+    "detention_block": Location(
+        name="Detention Block",
+        description="""
+        A secure area where suspects and prisoners are held pending
+        trial. Security is tight; automated systems monitor all activity.
+        Francis Clousarr, a man with a history of anti-robot activism,
+        is held here pending questioning about recent incidents.
+        """,
+        exits={"headquarters": "police_headquarters"},
+        npcs=["Francis Clousarr"],
+        items=[],
     ),
 }

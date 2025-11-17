@@ -34,31 +34,71 @@ class EndingsManager:
     def _create_endings(self):
         """Create all possible endings."""
 
-        # Perfect Justice Ending
+        # Perfect Justice Ending - Solve with all evidence
         self.endings.append(
             Ending(
                 "perfect_justice",
                 "THE PERFECT INVESTIGATOR",
-                """You correctly identified the killer and gathered all evidence without errors.
-Your detective work was flawless, and the killer is now facing justice.
+                """You correctly identified Julius Enderby as the killer, backed by comprehensive evidence:
+the broken eyeglasses, R. Sammy's weapon transport, and the Medievalist conspiracy.
+
+Your detective work was flawless. Enderby is convicted for murder.
+
 R. Daneel reflects: "Your deductive reasoning was exemplary, Detective. 
-You have upheld human justice admirably."
+You have upheld human justice admirably. Sarton did not die in vain."
 
 With this case solved, your reputation in the Caves of Steel is cemented as 
-one of the greatest detectives ever. The Commissioner offers you any assignment 
-you wish.
+one of the greatest detectives ever. The Commissioner offers you any assignment.
 
-You have truly solved The Caves of Steel.""",
+But privately, the Spacers remain unsatisfied. Enderby was supposed to serve 
+their cause. Instead, he faces prison. They depart Earth, their mission incomplete.
+
+You have truly solved The Caves of Steel—but at the cost of galactic expansion.""",
                 lambda p, gs, mp: (
-                    mp.check_solution(mp.actual_killer)["correct"]
-                    and len(p.clues_found) >= 8
-                    and p.investigation_points >= 100
+                    mp.check_solution("Julius Enderby")["correct"]
+                    and sum(1 for v in mp.key_evidence.values() if v) >= 4
                 ),
                 score_bonus=500,
             )
         )
 
-        # Justice Served Ending
+        # Spacer Conspiracy Resolution - Enderby freed to work for Spacers
+        self.endings.append(
+            Ending(
+                "spacer_resolution",
+                "THE GREATER GOOD",
+                """You identified Julius Enderby as the killer—but the Spacers already knew.
+
+Han Fastolfe approaches you privately: "Detective, Enderby's death was intended 
+as R. Daneel's death. A tragic accident. We accept this sacrifice."
+
+He explains the larger picture: Earth's humanity is stagnant. Population declining. 
+Technology stagnating. The Spacers had a plan—introduce humanoid robots gradually, 
+overcome human prejudice, inspire galactic colonization.
+
+Enderby, they explain, was part of their solution, not their problem. 
+His anti-robot faction (the Medievalists) represented a necessary resistance 
+to overcome—and a converted Medievalist could influence thousands.
+
+"Commissioner Enderby," Fastolfe continues, "will work with us to promote 
+colonization among his former faction. The case will remain officially unsolved. 
+Sarton's death becomes the catalyst for change."
+
+You realize you've been used—but perhaps for humanity's greater good.
+The Spacers board their ship. Enderby receives a quiet promotion.
+Earth enters a new era of human-robot cooperation.
+
+Your conscience remains troubled. Justice compromised for progress.""",
+                lambda p, gs, mp: (
+                    mp.check_solution("Julius Enderby")["correct"]
+                    and sum(1 for v in mp.key_evidence.values() if v) >= 2
+                    and sum(1 for v in mp.key_evidence.values() if v) < 4
+                ),
+                score_bonus=300,
+            )
+        )
+
+        # Incomplete Investigation - Wrong Suspect
         self.endings.append(
             Ending(
                 "justice_served",
