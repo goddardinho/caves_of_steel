@@ -83,7 +83,7 @@ LOCATIONS = {
         in the Caves of Steel is dispensed.
         """,
         exits={"plaza": "central_plaza", "commissioner_office": "commissioner_office", "robot_division": "robot_division", "detention": "detention_block"},
-        npcs=["Commander Lije Bailey", "Desk Officer", "Vince Barrett"],
+        npcs=["Desk Officer", "Vince Barrett"],
         items=["case_files"],
     ),
     "commissioner_office": Location(
@@ -161,8 +161,8 @@ LOCATIONS = {
         npcs=["R. Sammy"],
         items=[],
     ),
-    "spacer_embassy": Location(
-        name="Spacer Embassy",
+    "spacetown": Location(
+        name="Spacetown",
         description="""
         An elegant facility representing the interests of Earth's
         spacer colonies and allies. The air here feels different—cleaner,

@@ -32,12 +32,8 @@ NPC_NAME_MAP = {
     "gerrigel": "Dr. Anthony Gerrigel",
     "dr gerrigel": "Dr. Anthony Gerrigel",
     "francis clousarr": "Francis Clousarr",
-    "francis": "Francis Clousarr",
+    "francis clousarr": "Francis Clousarr",
     "clousarr": "Francis Clousarr",
-    "commander lije bailey": "Commander Lije Bailey",
-    "commander": "Commander Lije Bailey",
-    "lije": "Commander Lije Bailey",
-    "lije bailey": "Commander Lije Bailey",
     "jessie bailey": "Jessie Bailey",
     "jessie": "Jessie Bailey",
     "ben bailey": "Ben Bailey",
@@ -228,7 +224,6 @@ This might be connected to the crime scene.""",
             "r. daneel olivaw": "A humanoid robot with a smooth, plastic face and penetrating electronic eyes. Despite being a robot, there's something almost human about him.",
             "julius enderby": "The Commissioner — an imposing man in uniform with keen eyes. He commands authority and expects results.",
             "desk officer": "A hardened veteran of the police force, weathered by years of service.",
-            "commander lije bailey": "A stern-faced officer who commands respect through presence alone.",
             "neighbor": "An ordinary citizen going about their daily life.",
             "city official": "A bureaucrat in formal attire, always busy with official business.",
             "street vendor": "Someone selling goods in the plaza, trying to make a living.",
@@ -371,16 +366,6 @@ This might be connected to the crime scene.""",
         human dignity. Maybe someone else agreed with me more forcefully."
         
         His fists clench against the detention glass.
-        """,
-            "commander lije bailey": """
-        The Commander reviews a file on his desk, then looks up.
-        
-        "Good to see you. The Sarton case is priority. We've got pressure
-        from above — the Outer Regions, the Commissioner, everyone. You and
-        that robot partner of yours need to bring this to a close. Fast.
-        Any leads?"
-        
-        He waits for your response.
         """,
             "jessie bailey": """
         Jessie looks up from a small pile of personal effects, smiling when she sees you.

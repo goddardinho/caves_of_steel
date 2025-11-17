@@ -194,18 +194,6 @@ His eyes study you intently, as if assessing your potential.""",
         clousarr.add_node("start", c_start)
         self.trees["Francis Clousarr"] = clousarr
 
-        # Commander Lije Bailey - superior officer
-        commander = DialogueTree("Commander Lije Bailey")
-        cmd_start = DialogueNode(
-            "Commander Lije Bailey",
-            """The Commander nods curtly. 'You're back. Any progress on the Sarton case?'""",
-        )
-        cmd_start.add_choice(DialogueChoice("Report what you've found.", relationship_impact=8))
-        cmd_start.add_choice(DialogueChoice("Ask for guidance.", relationship_impact=10))
-        cmd_start.add_choice(DialogueChoice("Say you're still investigating.", relationship_impact=5))
-        commander.add_node("start", cmd_start)
-        self.trees["Commander Lije Bailey"] = commander
-
     def _create_commissioner_dialogue(self):
         """Create Julius Enderby (Commissioner) dialogue tree.
 

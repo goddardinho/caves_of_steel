@@ -85,7 +85,6 @@ class RelationshipManager:
             "Julius Enderby",
             "R. Daneel Olivaw",
             "Desk Officer",
-            "Commander Lije Bailey",
             "Neighbor",
             "City Official",
             "Street Vendor",
