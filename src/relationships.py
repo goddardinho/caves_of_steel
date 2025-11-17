@@ -82,20 +82,33 @@ class RelationshipManager:
     def _init_npcs(self):
         """Initialize all NPC relationships."""
         npcs = [
-            "Commissioner",
+            "Julius Enderby",
             "R. Daneel Olivaw",
             "Desk Officer",
-            "Commander",
+            "Commander Lije Bailey",
             "Neighbor",
             "City Official",
             "Street Vendor",
             "Administrator",
             "Records Clerk",
             "Dispensary Attendant",
+            "Jessie Bailey",
+            "Ben Bailey",
+            "Vince Barrett",
+            "R. Sammy",
+            "Han Fastolfe",
+            "Dr. Anthony Gerrigel",
+            "Francis Clousarr",
         ]
 
         for npc in npcs:
             self.relationships[npc] = NPCRelationship(npc)
+
+        # Set initial family relationships warmer than default
+        if "Jessie Bailey" in self.relationships:
+            self.relationships["Jessie Bailey"].trust = 70
+        if "Ben Bailey" in self.relationships:
+            self.relationships["Ben Bailey"].trust = 50
 
     def get_relationship(self, npc_name):
         """Get relationship object for an NPC.

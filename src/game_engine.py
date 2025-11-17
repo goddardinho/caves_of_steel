@@ -24,6 +24,7 @@ class GameEngine:
         self.command_processor = CommandProcessor(player, game_state)
         self.save_system = SaveSystem(save_dir)
         self.running = True
+        self.demo_mode = False  # Flag to indicate if running in demo mode
 
     def run(self):
         """Main game loop."""
@@ -73,6 +74,7 @@ class GameEngine:
         Args:
             commands: List[str] commands to run in sequence
         """
+        self.demo_mode = True  # Set demo flag
         # Minimal non-blocking welcome
         try:
             from src.utils import clear_screen
@@ -106,6 +108,8 @@ class GameEngine:
                     self.load_game()
                     continue
 
+                # Update command processor demo mode flag
+                self.command_processor.demo_mode = self.demo_mode
                 self.command_processor.process(cmd)
                 if self.game_state.case_solved:
                     self.display_case_conclusion()

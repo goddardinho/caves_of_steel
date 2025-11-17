@@ -1,5 +1,244 @@
 # Caves of Steel - Changelog
 
+## Version 0.4.0 - Complete Plot Implementation & NPC Personalization
+
+### Major Features
+
+#### 1. **Complete "Caves of Steel" Plot Integration** 📖
+- Full plot implementation based on Isaac Asimov's classic novel
+- Political factions system with three competing ideologies:
+  - **Spacer Expansionists**: Promote human-robot cooperation and galactic colonization
+  - **Medievalists**: Anti-robot faction seeking to preserve human Earth culture
+  - **Earth Officials**: Government maintaining status quo
+- Murder mystery: Dr. Roj Nemennuh Sarton death investigation
+- Mistaken identity plot: Julius Enderby (secretly Medievalist) murders Sarton intending to kill R. Daneel
+- Multiple resolution paths leading to different endings
+
+#### 2. **All 11 Main Book Characters as NPCs** 👥
+Complete implementation of all principal characters:
+- **Elijah "Lije" Baley** - Series protagonist detective
+- **R. Daneel Olivaw** - Humanoid robot partner
+- **Julius Enderby** - Police Commissioner (actual killer)
+- **Jessie Bailey** - Lije's wife with growing concerns
+- **Ben Bailey** - Young son fascinated by robots
+- **Vince Barrett** - Disgruntled junior officer losing position to robots
+- **R. Sammy** - Service robot (weapon accomplice, not guilty)
+- **Han Fastolfe** - Spacer diplomat advancing robot-human agenda
+- **Dr. Anthony Gerrigel** - Robotics scientist
+- **Francis Clousarr** - Medievalist militant anti-robot activist
+- **Commander Lije Bailey** - Military authority (ancestor/separate timeline reference)
+
+Each NPC includes:
+- Unique dialogue trees with character-specific responses
+- Detailed physical examination descriptions
+- Relationship tracking with trust/suspicion values
+- Investigation clues and plot-relevant information
+
+#### 3. **Investigation System with Evidence Tracking** 🔍
+- Multi-category investigation command: `investigate <category>`
+- Five evidence types tracked:
+  1. **Eyeglasses Evidence** - Broken glasses at crime scene (key forensic evidence)
+  2. **Enderby Information** - Clues about Commissioner's guilt
+  3. **R. Sammy Involvement** - Weapon transport conspiracy
+  4. **Spacer Conspiracy** - Political faction context
+  5. **Suspect Information** - Character-specific investigation data
+- Evidence counter displays progress (e.g., "Evidence Found: 3/5")
+- Eyeglasses collected and examined with forensic analysis
+- Investigation points system for detective progression
+
+#### 4. **Dynamic Mystery Tracking** 📊
+- Seven suspects with individual alibis
+- Suspects Questioned counter (0/7)
+- Alibis Verified counter (0/7)
+- Evidence Found counter (0/5)
+- 90-minute deadline for Spacer departure (time pressure element)
+- Real-time investigation status in mystery command
+
+#### 5. **Multiple Endings System** 🎭
+Two distinct resolution paths:
+
+**Perfect Justice Ending** ⚖️
+- Triggered when sufficient evidence (4-5 clues) collected
+- Julius Enderby convicted for Sarton's murder
+- Spacer expansion agenda halted
+- Traditional justice system upheld
+- Earth maintains anti-robot status quo
+
+**Spacer Resolution Ending** 🚀
+- Triggered with partial evidence (2-3 clues)
+- Spacers negotiate Enderby's freedom for colonization work
+- Enderby continues as Commissioner (corruption tolerated)
+- Human-robot cooperation begins on Earth
+- Spacers gain strategic foothold for human colonization
+- Justice compromised for political progress
+
+#### 6. **NPC First-Name Alias System** 🎤
+- Players can now interact with NPCs using first names (case-insensitive)
+- 30+ aliases configured for natural interaction:
+  - `daneel` → R. Daneel Olivaw
+  - `julius` → Julius Enderby
+  - `jessie` → Jessie Bailey
+  - `ben` → Ben Bailey
+  - And 26+ others
+- Works across all NPC commands: `talk`, `examine`, `ask`, `play`, `comfort`
+- Enhanced immersion and personal connection with characters
+
+### Technical Features
+
+#### 1. **Faction Class** (New Data Structure)
+- `name`: Faction identifier
+- `ideology`: Core beliefs
+- `goal`: Political objective
+- `methods`: How faction operates
+- Full faction details tracked for detective use
+
+#### 2. **Enhanced Mystery Plot** (src/mystery_plot.py)
+- Seven suspects vs. previous single culprit tracking
+- `key_evidence` tracking for all 5 evidence types
+- `record_evidence()` method for investigation flow
+- Actual killer identified: Julius Enderby
+- Accomplice tracking: R. Sammy (involved but not guilty of murder)
+- Mistaken identity context preserved in investigation
+
+#### 3. **Demo Mode Non-Blocking Execution**
+- `demo_mode` flag prevents input() blocking in non-interactive environments
+- Branching dialogue defaults to choice 1 when demo_mode=True
+- Enables automated testing and demo execution
+
+#### 4. **Five New Locations** 🗺️
+- `robot_division` - Where R. Sammy works
+- `spacer_embassy` - Han Fastolfe's headquarters
+- `robotics_lab` - Dr. Gerrigel's research facility
+- `detention_block` - Francis Clousarr's holding area
+- Each location contains relevant NPCs and clues
+
+### Commands & Gameplay
+
+#### New Commands
+- `investigate <category>` - Multi-category investigation system
+  - `investigate eyeglasses` - Forensic analysis of broken glasses
+  - `investigate enderby` - Commissioner guilt clues
+  - `investigate sammy` - Robot accomplice information
+  - `investigate spacer_conspiracy` - Political faction context
+- `accuse <npc_name>` - Accusation system triggering appropriate ending
+
+#### Enhanced Commands
+- `talk <first_name or full_name>` - Works with both formats
+- `examine <first_name or full_name>` - NPC examination with name resolution
+- `ask <first_name> <topic>` - Family-focused dialogue with aliases
+- `play <first_name>` - Play with Ben using any alias
+- `comfort <first_name>` - Comfort Jessie using any alias
+- `mystery` - Enhanced to show all investigation counters
+
+### User Interface Improvements
+
+#### Investigation Status Display
+```
+╔═════════════════════════════════════════╗
+║          MURDER INVESTIGATION           ║
+├─────────────────────────────────────────┤
+║ Victim: Dr. Roj Nemennuh Sarton
+║ Cause: Blaster wound
+║ Time: between 14:45 and 16:00
+║ Suspects Questioned: 0/7
+║ Alibis Verified: 0/7
+║ Evidence Found: 3/5
+║ Time Until Spacers Leave: 90 min
+╚═════════════════════════════════════════╝
+```
+
+#### Ending Narratives
+- Detailed, emotionally resonant conclusions
+- Character-driven resolution explaining:
+  - Killer's identity and motive
+  - Political implications
+  - Character fate (Enderby's continued promotion)
+  - Larger thematic meaning (justice vs. progress)
+
+### File Changes
+
+#### Modified Files
+- `src/mystery_plot.py` - Added Faction class, seven suspects, evidence tracking
+- `src/commands.py` - Added investigate command, NPC_NAME_MAP (30+ aliases), name resolution
+- `src/game_engine.py` - Added demo_mode flag and passing
+- `src/dialogue_system.py` - Expanded NPC dialogue with plot context
+- `src/locations.py` - Added eyeglass_evidence, five new locations
+- `src/endings.py` - Replaced with two new endings (perfect_justice, spacer_resolution)
+- `main.py` - Updated demo commands to showcase investigation flow
+
+#### Data Structures Updated
+```python
+# Faction class added
+class Faction:
+    name: str
+    ideology: str
+    goal: str
+    methods: str
+
+# MysteryPlot updated with
+actual_killer = "Julius Enderby"
+key_evidence = {}  # Tracks 5 evidence types
+suspects = [7 characters]  # Extended from 1-2 to full list
+```
+
+### Testing & Validation
+
+All features tested and verified:
+- ✓ Demo mode runs to completion without hanging
+- ✓ All 11 NPCs spawn in correct locations
+- ✓ Investigation system identifies correct killer
+- ✓ Both endings trigger appropriately based on evidence
+- ✓ Name alias system works across all NPC commands
+- ✓ Eyeglasses evidence collects and displays correctly
+- ✓ Faction system tracks political dynamics
+- ✓ All code compiles without syntax errors
+- ✓ Save/load compatible with previous versions
+
+### Bug Fixes
+
+- Fixed demo mode hanging on branching dialogue (input() blocking)
+- Removed "(mistaken identity)" from murder display while maintaining tracker
+- Ensured eyeglasses evidence properly located and examinable
+- Corrected R. Sammy involvement (accomplice, not killer)
+
+### Gameplay Improvements
+
+- **Immersive NPC Interaction**: First-name aliases create personal connections
+- **Multiple Solutions**: Evidence gathering affects ending (not just accuser)
+- **Political Complexity**: Faction system adds moral ambiguity to justice
+- **Time Pressure**: 90-minute Spacer deadline increases urgency
+- **Character Development**: All NPCs have meaningful roles in plot
+
+### Known Limitations
+
+- Difficulty levels still tracked but not affecting gameplay
+- Spacer conspiracy details limited to investigation hints
+- Limited branching dialogue (choices default to 1 in demo mode)
+- No alternate suspect accusations (Enderby is always correct)
+
+### Future Enhancements
+
+- Difficulty-based investigation complexity (fewer/more clues)
+- Alternative suspect accusations with consequences
+- Extended dialogue tree branching
+- Character backstory subplots
+- Achievement system (justice vs. pragmatism tracking)
+- New Game+ with variations
+
+### Migration Notes
+
+For existing saves from v0.2.0/v0.3.0:
+1. Old saves remain compatible but won't have investigation data
+2. New investigation features only available in new games
+3. NPC aliases work for all new interactions
+4. Multiple endings automatically determined by evidence collected
+
+---
+
+**Release Date**: November 17, 2025  
+**Version**: 0.4.0  
+**Status**: Stable
+
 ## Version 0.2.0 - Enhanced User Experience
 
 ### New Features

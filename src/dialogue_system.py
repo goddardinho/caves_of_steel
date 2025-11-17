@@ -99,26 +99,131 @@ class DialogueManager:
 
     def _create_dialogue_trees(self):
         """Create dialogue trees for all NPCs."""
-        self.trees["Commissioner"] = self._create_commissioner_dialogue()
+        self.trees["Julius Enderby"] = self._create_commissioner_dialogue()
         self.trees["R. Daneel Olivaw"] = self._create_daneel_dialogue()
         self.trees["Records Clerk"] = self._create_clerk_dialogue()
 
+        # Jessie Bailey - family dialogue (original content inspired by family concerns)
+        jessie = DialogueTree("Jessie Bailey")
+        j_start = DialogueNode(
+            "Jessie Bailey",
+            """Jessie looks anxious but relieved to see you. 'We're all worried,' she says.""",
+        )
+        j_start.add_choice(DialogueChoice("Ask how she's holding up.", relationship_impact=5))
+        j_start.add_choice(DialogueChoice("Ask about family routines.", relationship_impact=3))
+        j_start.add_choice(DialogueChoice("Offer reassurance.", relationship_impact=10))
+        jessie.add_node("start", j_start)
+        self.trees["Jessie Bailey"] = jessie
+
+        # Ben Bailey - short, age-appropriate dialogue
+        ben = DialogueTree("Ben Bailey")
+        b_start = DialogueNode(
+            "Ben Bailey",
+            """Ben looks up, clutching a small model rocket. 'Hi,' he says, watching you closely.""",
+        )
+        b_start.add_choice(DialogueChoice("Ask about the rocket.", relationship_impact=8))
+        b_start.add_choice(DialogueChoice("Ask how he's feeling.", relationship_impact=5))
+        b_start.add_choice(DialogueChoice("Offer to play a quick game.", relationship_impact=10))
+        ben.add_node("start", b_start)
+        self.trees["Ben Bailey"] = ben
+
+        # Vince Barrett - colleague who lost position to robot
+        vince = DialogueTree("Vince Barrett")
+        v_start = DialogueNode(
+            "Vince Barrett",
+            """Vince looks frustrated. 'Another robot case,' he mutters. 'My old job, now a machine does it.'""",
+        )
+        v_start.add_choice(DialogueChoice("Sympathize with him.", relationship_impact=10))
+        v_start.add_choice(DialogueChoice("Ask about his experience.", relationship_impact=5))
+        v_start.add_choice(DialogueChoice("Move on.", relationship_impact=0))
+        vince.add_node("start", v_start)
+        self.trees["Vince Barrett"] = vince
+
+        # R. Sammy - robot colleague
+        sammy = DialogueTree("R. Sammy")
+        s_start = DialogueNode(
+            "R. Sammy",
+            """R. Sammy's optical sensors blink in sequence. 'Detective. I have processed the available case data.'""",
+        )
+        s_start.add_choice(DialogueChoice("Request the analysis.", relationship_impact=5))
+        s_start.add_choice(DialogueChoice("Ask about integration with humans.", relationship_impact=8))
+        s_start.add_choice(DialogueChoice("Ignore the robot.", relationship_impact=-5))
+        sammy.add_node("start", s_start)
+        self.trees["R. Sammy"] = sammy
+
+        # Han Fastolfe - Spacer roboticist diplomat
+        han = DialogueTree("Han Fastolfe")
+        h_start = DialogueNode(
+            "Han Fastolfe",
+            """Han greets you with understated courtesy, but his expression carries urgency.
+
+'Detective. I was acquainted with Dr. Sarton's research. He was more than
+a scientist — he was a bridge between our worlds. His death troubles us deeply.
+But perhaps it will serve a greater purpose if it teaches your people the value
+of cooperation with robots.'
+
+His eyes study you intently, as if assessing your potential.""",
+        )
+        h_start.add_choice(DialogueChoice("Ask about Sarton's true work.", relationship_impact=10))
+        h_start.add_choice(DialogueChoice("Inquire about Spacer interests on Earth.", relationship_impact=8))
+        h_start.add_choice(DialogueChoice("Ask directly if he has information.", relationship_impact=5))
+        han.add_node("start", h_start)
+        self.trees["Han Fastolfe"] = han
+
+        # Dr. Anthony Gerrigel - roboticist researcher
+        gerrigel = DialogueTree("Dr. Anthony Gerrigel")
+        g_start = DialogueNode(
+            "Dr. Anthony Gerrigel",
+            """Dr. Gerrigel looks up from his work. 'I heard about Roj. A tragic loss for our field.'""",
+        )
+        g_start.add_choice(DialogueChoice("Ask about his relationship with Sarton.", relationship_impact=8))
+        g_start.add_choice(DialogueChoice("Request technical details on robotics.", relationship_impact=10))
+        g_start.add_choice(DialogueChoice("Ask if anyone wanted Sarton dead.", relationship_impact=5))
+        gerrigel.add_node("start", g_start)
+        self.trees["Dr. Anthony Gerrigel"] = gerrigel
+
+        # Francis Clousarr - anti-robot activist suspect
+        clousarr = DialogueTree("Francis Clousarr")
+        c_start = DialogueNode(
+            "Francis Clousarr",
+            """Francis eyes you coldly from behind the detention glass. 'Come to interrogate me, Detective?'""",
+        )
+        c_start.add_choice(DialogueChoice("Ask directly about Sarton.", relationship_impact=0))
+        c_start.add_choice(DialogueChoice("Inquire about his whereabouts.", relationship_impact=5))
+        c_start.add_choice(DialogueChoice("Question his anti-robot activities.", relationship_impact=-10))
+        clousarr.add_node("start", c_start)
+        self.trees["Francis Clousarr"] = clousarr
+
+        # Commander Lije Bailey - superior officer
+        commander = DialogueTree("Commander Lije Bailey")
+        cmd_start = DialogueNode(
+            "Commander Lije Bailey",
+            """The Commander nods curtly. 'You're back. Any progress on the Sarton case?'""",
+        )
+        cmd_start.add_choice(DialogueChoice("Report what you've found.", relationship_impact=8))
+        cmd_start.add_choice(DialogueChoice("Ask for guidance.", relationship_impact=10))
+        cmd_start.add_choice(DialogueChoice("Say you're still investigating.", relationship_impact=5))
+        commander.add_node("start", cmd_start)
+        self.trees["Commander Lije Bailey"] = commander
+
     def _create_commissioner_dialogue(self):
-        """Create Commissioner dialogue tree.
+        """Create Julius Enderby (Commissioner) dialogue tree.
 
         Returns:
             DialogueTree
         """
-        tree = DialogueTree("Commissioner")
+        tree = DialogueTree("Julius Enderby")
 
         start_node = DialogueNode(
-            "Commissioner",
-            """The Commissioner looks at you seriously.
+            "Julius Enderby",
+            """The Commissioner looks at you seriously. There's a slight nervousness in his manner.
 
 "We have a serious matter. Dr. Roj Nemennuh Sarton was found dead in his apartment.
 You're assigned to investigate. However, I'm also assigning you a robot
 partner. His name is R. Daneel Olivaw. I know you won't like it, but
 this is non-negotiable."
+
+He adjusts his eyeglasses with a slight tremor in his hand. Something seems off.
 
 What do you want to say?""",
         )
