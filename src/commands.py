@@ -5,6 +5,47 @@ Command Processor - Handles player commands
 from src.locations import LOCATIONS
 
 
+# NPC name mappings for first-name shortcuts
+NPC_NAME_MAP = {
+    # Full names
+    "r. daneel olivaw": "R. Daneel Olivaw",
+    "daneel": "R. Daneel Olivaw",
+    "r daneel": "R. Daneel Olivaw",
+    "olivaw": "R. Daneel Olivaw",
+    "julius enderby": "Julius Enderby",
+    "julius": "Julius Enderby",
+    "enderby": "Julius Enderby",
+    "commissioner": "Julius Enderby",
+    "records clerk": "Records Clerk",
+    "clerk": "Records Clerk",
+    "vince barrett": "Vince Barrett",
+    "vince": "Vince Barrett",
+    "barrett": "Vince Barrett",
+    "r. sammy": "R. Sammy",
+    "sammy": "R. Sammy",
+    "r sammy": "R. Sammy",
+    "han fastolfe": "Han Fastolfe",
+    "han": "Han Fastolfe",
+    "fastolfe": "Han Fastolfe",
+    "dr. anthony gerrigel": "Dr. Anthony Gerrigel",
+    "anthony": "Dr. Anthony Gerrigel",
+    "gerrigel": "Dr. Anthony Gerrigel",
+    "dr gerrigel": "Dr. Anthony Gerrigel",
+    "francis clousarr": "Francis Clousarr",
+    "francis": "Francis Clousarr",
+    "clousarr": "Francis Clousarr",
+    "commander lije bailey": "Commander Lije Bailey",
+    "commander": "Commander Lije Bailey",
+    "lije": "Commander Lije Bailey",
+    "lije bailey": "Commander Lije Bailey",
+    "jessie bailey": "Jessie Bailey",
+    "jessie": "Jessie Bailey",
+    "ben bailey": "Ben Bailey",
+    "ben": "Ben Bailey",
+    "bentley": "Ben Bailey",
+}
+
+
 class CommandProcessor:
     """Processes and executes player commands."""
 
@@ -46,6 +87,18 @@ class CommandProcessor:
             "puzzle": self.cmd_puzzle,
             "settings": self.cmd_settings,
         }
+
+    def _resolve_npc_name(self, input_name):
+        """Resolve a player input NPC name to the canonical full name.
+
+        Args:
+            input_name: Player's input (e.g., "daneel", "han", "julius")
+
+        Returns:
+            str: Canonical NPC name, or the input if no match found
+        """
+        input_lower = input_name.lower().strip()
+        return NPC_NAME_MAP.get(input_lower, input_name)
 
     def process(self, command_string):
         """Process a player command.
@@ -166,8 +219,11 @@ This might be connected to the crime scene.""",
         """Examine an NPC.
 
         Args:
-            npc: NPC name
+            npc: NPC name (can be first name or full name)
         """
+        # Resolve first name to full name
+        canonical_npc = self._resolve_npc_name(npc)
+        
         descriptions = {
             "r. daneel olivaw": "A humanoid robot with a smooth, plastic face and penetrating electronic eyes. Despite being a robot, there's something almost human about him.",
             "julius enderby": "The Commissioner — an imposing man in uniform with keen eyes. He commands authority and expects results.",
@@ -189,7 +245,7 @@ This might be connected to the crime scene.""",
             "francis clousarr": "A thin, intense man behind detention glass. His eyes burn with conviction and resentment toward robots.",
         }
 
-        description = descriptions.get(npc.lower(), f"You observe {npc} carefully.")
+        description = descriptions.get(canonical_npc.lower(), f"You observe {canonical_npc} carefully.")
         print(f"\n👤 {description}\n")
 
     def cmd_talk(self, args):
@@ -219,16 +275,19 @@ This might be connected to the crime scene.""",
         """Handle dialogue with an NPC.
 
         Args:
-            npc: NPC name (lowercase)
+            npc: NPC name (lowercase, can be first name or full name)
         """
-        self.player.met_characters.add(npc)
+        # Resolve first name to full name
+        canonical_npc = self._resolve_npc_name(npc)
+        
+        self.player.met_characters.add(canonical_npc)
 
         # Notify relationship manager (if available) that we talked to this NPC
         try:
             rel_manager = getattr(self.game_state, "relationships", None)
             if rel_manager:
                 # Find the canonical NPC name in the relationships map (case-insensitive)
-                match = next((k for k in rel_manager.relationships.keys() if k.lower() == npc.lower()), None)
+                match = next((k for k in rel_manager.relationships.keys() if k.lower() == canonical_npc.lower()), None)
                 if match:
                     rel_manager.talk_to_npc(match)
         except Exception:
@@ -611,11 +670,12 @@ This might be connected to the crime scene.""",
             return
 
         parts = args.split(maxsplit=1)
-        npc = parts[0].lower()
+        npc_input = parts[0].lower()
+        canonical_npc = self._resolve_npc_name(npc_input)
         topic = parts[1].lower() if len(parts) > 1 else ""
 
         # Family-specific topics
-        if npc in ("jessie", "jessie bailey"):
+        if canonical_npc.lower() in ("jessie bailey",):
             if "dinner" in topic or "meal" in topic:
                 print("\n💬 Jessie: 'Yes — dinner at seven. Ben is excited.'\n")
                 try:
@@ -626,7 +686,7 @@ This might be connected to the crime scene.""",
             print("\n💬 Jessie: 'I'm busy right now, love. Later?'\n")
             return
 
-        if npc in ("ben", "ben bailey"):
+        if canonical_npc.lower() in ("ben bailey",):
             if "robot" in topic:
                 print("\n💬 Ben: 'Robots are cool! They can walk and talk.'\n")
                 try:
@@ -637,7 +697,7 @@ This might be connected to the crime scene.""",
             print("\n💬 Ben: 'I dunno about that. Can we play instead?'\n")
             return
 
-        print(f"\n❌ You can't ask '{npc}' about that here.\n")
+        print(f"\n❌ You can't ask '{canonical_npc}' about that here.\n")
 
     def cmd_play(self, args):
         """Play command - play with a child NPC (Ben)."""
@@ -645,8 +705,10 @@ This might be connected to the crime scene.""",
             print("\n❌ Play with whom? Try: play ben\n")
             return
 
-        npc = args.lower().strip()
-        if npc in ("ben", "ben bailey"):
+        npc_input = args.lower().strip()
+        canonical_npc = self._resolve_npc_name(npc_input)
+        
+        if canonical_npc.lower() in ("ben bailey",):
             print("\n🎲 You play a quick game with Ben. He laughs and tugs your sleeve.\n")
             try:
                 self.game_state.relationships.get_relationship("Ben Bailey").increase_trust(10)
@@ -662,8 +724,10 @@ This might be connected to the crime scene.""",
             print("\n❌ Comfort whom? Try: comfort jessie\n")
             return
 
-        npc = args.lower().strip()
-        if npc in ("jessie", "jessie bailey"):
+        npc_input = args.lower().strip()
+        canonical_npc = self._resolve_npc_name(npc_input)
+        
+        if canonical_npc.lower() in ("jessie bailey",):
             print("\n🤝 You take Jessie in a brief embrace and assure her you'll be careful.\n")
             try:
                 self.game_state.relationships.get_relationship("Jessie Bailey").increase_trust(8)

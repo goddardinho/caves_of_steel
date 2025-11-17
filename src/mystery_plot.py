@@ -50,11 +50,11 @@ class VictimProfile:
         self.occupation = "Robotics Specialist (Spacer)"
         self.last_seen = "Spacetown at 14:30"
         self.time_of_death = "between 14:45 and 16:00"
-        self.cause_of_death = "Blaster wound (mistaken identity)"
-        self.motive_info = "Intended victim was R. Daneel Olivaw; Sarton's designer/creator"
+        self.cause_of_death = "Blaster wound"
+        self.motive_info = "Victim of a conspiracy involving Earth and Spacer factions"
         self.significance = (
-            "His death was intended to be the target assassin was aiming at R. Daneel. "
-            "The true target was not Sarton but the humanoid robot he created."
+            "His death marks a critical turning point in human-robot relations on Earth. "
+            "Political powers vie to control the investigation's outcome."
         )
 
 
