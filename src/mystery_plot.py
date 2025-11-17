@@ -150,7 +150,7 @@ class MysteryPlot:
             "Han Fastolfe": Suspect(
                 name="Han Fastolfe",
                 motive="Professional conflict with Sarton over research approach",
-                alibi="At Spacer Embassy with limited staff",
+                alibi="At Spacetown with limited staff",
                 guilty=False,
             ),
             "R. Sammy": Suspect(

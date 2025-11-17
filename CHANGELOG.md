@@ -14,7 +14,7 @@
 - Mistaken identity plot: Julius Enderby (secretly Medievalist) murders Sarton intending to kill R. Daneel
 - Multiple resolution paths leading to different endings
 
-#### 2. **All 11 Main Book Characters as NPCs** 👥
+#### 2. **All 10 Main Book Characters as NPCs** 👥
 Complete implementation of all principal characters:
 - **Elijah "Lije" Baley** - Series protagonist detective
 - **R. Daneel Olivaw** - Humanoid robot partner
@@ -26,7 +26,6 @@ Complete implementation of all principal characters:
 - **Han Fastolfe** - Spacer diplomat advancing robot-human agenda
 - **Dr. Anthony Gerrigel** - Robotics scientist
 - **Francis Clousarr** - Medievalist militant anti-robot activist
-- **Commander Lije Bailey** - Military authority (ancestor/separate timeline reference)
 
 Each NPC includes:
 - Unique dialogue trees with character-specific responses
@@ -107,7 +106,7 @@ Two distinct resolution paths:
 
 #### 4. **Five New Locations** 🗺️
 - `robot_division` - Where R. Sammy works
-- `spacer_embassy` - Han Fastolfe's headquarters
+  - `spacetown` - Han Fastolfe's headquarters (renamed from `spacer_embassy`)
 - `robotics_lab` - Dr. Gerrigel's research facility
 - `detention_block` - Francis Clousarr's holding area
 - Each location contains relevant NPCs and clues
