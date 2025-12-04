@@ -1,3 +1,19 @@
+        examinations = {
+            "communal_bathroom": (
+                "(Also called 'personal' by most citizens.) "
+                            "personal": (
+                                "(Common usage: 'personal') This is the communal bathroom, used by all residents. See 'communal_bathroom' for details."
+                "A long, tiled room with rows of sinks, showers, and toilet stalls. The air is humid and echoes with the sounds of running water and quiet conversation. "
+                "Most apartments lack personal bathrooms, so everyone must use these communal spaces. "
+                "Men tend to treat the bathroom as a place for quick, silent routines, rarely lingering or socializing. "
+                "Women, by contrast, often use the space for brief conversation, sharing news, or supporting one another in the crowded environment. "
+                "Social norms discourage any display of modesty or embarrassment; the regimentation of life in the caves means everyone adapts to the lack of privacy."
+            ),
+            "sink": "A row of utilitarian sinks, each with a single spout dispensing recycled water. Citizens wash quickly and efficiently.",
+            "shower": "Open showers with minimal partitions. The water is lukewarm and rationed. Privacy is not a priority.",
+            "toilet_stall": "Small stalls with thin doors. The facilities are clean but basic. Everyone is expected to use them without fuss.",
+            "towel_dispenser": "A mechanical dispenser that issues thin, synthetic towels. Most citizens return them for recycling after use.",
+        }
 """
 Command Processor - Handles player commands
 """

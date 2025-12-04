@@ -1,5 +1,38 @@
 # Caves of Steel - Changelog
 
+## Version 0.8.0 - December 4, 2025
+
+### Major Changes
+- Expanded dynamic mystery tracking: investigation actions (questioning, verifying alibis, finding evidence) are now logged and shown in the summary, along with ruled-out suspects.
+- Evidence is mapped to implicated suspects and displayed in the summary.
+- Added time pressure mechanic: investigation now has a canon-accurate 24-hour (1440 minute) time limit. Time advances with major actions and can force the investigation to end if it runs out.
+- Implemented branching investigation paths: key choices can lock suspects and evidence, affecting available clues and possible endings.
+- Updated `.gitignore` to recursively exclude all `__pycache__` directories; deleted all existing Python cache folders for a clean repo.
+
+### Testing & Validation
+- All new mechanics tested and confirmed working via direct code execution and demo runs.
+- Summary/status output now reflects time, branching, locked suspects/evidence, and recent actions.
+
+---
+
+## Version 0.7.0 - December 4, 2025
+
+### Major Changes
+- All references to 'Elijah Bailey' corrected to 'Elijah Baley' throughout code and documentation.
+- Enhanced `settings` command: now supports changing detective name, difficulty, text speed, and accessibility mode, with improved menu/help text.
+- Expanded `help` command output: added detailed settings and navigation instructions for better usability.
+- Typing `exit` no longer quits the game; only `quit` will exit. `exit` now shows an unknown command message.
+- Removed non-canonical NPC 'Commander Lije Bailey' from all code and documentation.
+- Renamed 'Spacer Embassy' to 'Spacetown' everywhere (location key, display name, alibi text, changelog).
+- Migrated major features section from changelog to `TODO.md` for ongoing planning and visibility.
+- Confirmed all modified files compile and demo runs successfully.
+
+### Refactors & Documentation
+- Improved codebase consistency and accuracy with book canon.
+- Updated changelog and TODO.md to reflect current feature set and refactors.
+
+---
+
 ## Version 0.4.0 - Complete Plot Implementation & NPC Personalization
 
 ### Major Features
@@ -383,36 +416,3 @@ For existing games:
 **Release Date**: November 14, 2025  
 **Version**: 0.2.0  
 **Status**: Stable
-
-## Version 0.7.0 - December 4, 2025
-
-### Major Changes
-- All references to 'Elijah Bailey' corrected to 'Elijah Baley' throughout code and documentation.
-- Enhanced `settings` command: now supports changing detective name, difficulty, text speed, and accessibility mode, with improved menu/help text.
-- Expanded `help` command output: added detailed settings and navigation instructions for better usability.
-- Typing `exit` no longer quits the game; only `quit` will exit. `exit` now shows an unknown command message.
-- Removed non-canonical NPC 'Commander Lije Bailey' from all code and documentation.
-- Renamed 'Spacer Embassy' to 'Spacetown' everywhere (location key, display name, alibi text, changelog).
-- Migrated major features section from changelog to `TODO.md` for ongoing planning and visibility.
-- Confirmed all modified files compile and demo runs successfully.
-
-### Refactors & Documentation
-- Improved codebase consistency and accuracy with book canon.
-- Updated changelog and TODO.md to reflect current feature set and refactors.
-
----
-
-## Version 0.8.0 - December 4, 2025
-
-### Major Changes
-- Expanded dynamic mystery tracking: investigation actions (questioning, verifying alibis, finding evidence) are now logged and shown in the summary, along with ruled-out suspects.
-- Evidence is mapped to implicated suspects and displayed in the summary.
-- Added time pressure mechanic: investigation now has a canon-accurate 24-hour (1440 minute) time limit. Time advances with major actions and can force the investigation to end if it runs out.
-- Implemented branching investigation paths: key choices can lock suspects and evidence, affecting available clues and possible endings.
-- Updated `.gitignore` to recursively exclude all `__pycache__` directories; deleted all existing Python cache folders for a clean repo.
-
-### Testing & Validation
-- All new mechanics tested and confirmed working via direct code execution and demo runs.
-- Summary/status output now reflects time, branching, locked suspects/evidence, and recent actions.
-
----

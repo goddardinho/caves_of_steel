@@ -1,3 +1,25 @@
+class Location:
+# ...existing code...
+
+# Communal Bathroom location (faithful to canon)
+
+# Communal Bathroom location (expanded, canon-faithful)
+COMMUNAL_BATHROOM = Location(
+    name="Personal (Communal) Bathroom",
+    description=(
+        "A long, tiled room with rows of sinks, showers, and toilet stalls. The air is humid and echoes with the sounds of running water and quiet conversation. "
+        "Privacy is minimal; citizens share facilities as part of daily life in the Caves of Steel. Most apartments lack personal bathrooms, so everyone must use these communal spaces. "
+        "Men tend to treat the bathroom as a place for quick, silent routines, rarely lingering or socializing. Women, by contrast, often use the space for brief conversation, sharing news, or supporting one another in the crowded environment. "
+        "Social norms discourage any display of modesty or embarrassment; the regimentation of life in the caves means everyone adapts to the lack of privacy."
+    ),
+    exits={"corridor": "corridor_residential"},
+    npcs=[],
+    items=["sink", "shower", "toilet_stall", "towel_dispenser"],
+)
+
+# Add to locations dictionary if not present
+LOCATIONS["communal_bathroom"] = COMMUNAL_BATHROOM
+LOCATIONS["personal"] = COMMUNAL_BATHROOM  # Common usage alias
 """
 Locations - Game world locations and map
 """
