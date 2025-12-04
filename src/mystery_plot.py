@@ -80,8 +80,27 @@ class MysteryPlot:
             "spacer_conspiracy": False,
             "broken_glasses_found": False,
         }
-        self.time_remaining = 90  # Minutes until Spacers leave Earth
+        # Map evidence to suspects
+        self.evidence_links = {
+            "eyeglass_fragments": ["Julius Enderby"],
+            "r_sammy_transport": ["R. Sammy", "Julius Enderby"],
+            "enderby_medievalist": ["Julius Enderby"],
+            "spacer_conspiracy": ["Han Fastolfe"],
+            "broken_glasses_found": ["Julius Enderby"],
+        }
+        self.time_remaining = 1440  # Minutes until Spacers leave Earth (24 hours, canon-accurate)
         self.case_breakthrough = False
+        self.history = []  # Investigation action log
+        self.locked_suspects = set()  # Suspects locked by choices
+        self.locked_evidence = set()  # Evidence locked by choices
+
+    def advance_time(self, minutes):
+        """Advance time and check for expiration."""
+        self.time_remaining = max(0, self.time_remaining - minutes)
+        self.history.append(f"Time advanced by {minutes} min. Remaining: {self.time_remaining} min.")
+        if self.time_remaining == 0:
+            self.history.append("Time expired! Investigation forced to end.")
+            # Could trigger a forced ending here
 
     def _create_factions(self):
         """Create all political factions.
@@ -185,6 +204,9 @@ class MysteryPlot:
         return info
 
     def verify_alibi(self, suspect_name):
+        if suspect_name in self.locked_suspects:
+            self.history.append(f"Cannot verify alibi for {suspect_name}: suspect is locked.")
+            return False
         """Mark a suspect's alibi as verified.
 
         Args:
@@ -198,12 +220,16 @@ class MysteryPlot:
             return False
 
         suspect.alibis_verified = True
+        self.history.append(f"Alibi verified for {suspect_name}.")
 
         # Strong alibis rule out suspects
         solid_alibis = ["Administrator", "Records Clerk", "R. Daneel Olivaw"]
         return suspect_name in solid_alibis
 
     def question_suspect(self, suspect_name):
+        if suspect_name in self.locked_suspects:
+            self.history.append(f"Cannot question {suspect_name}: suspect is locked.")
+            return
         """Mark a suspect as questioned.
 
         Args:
@@ -212,8 +238,12 @@ class MysteryPlot:
         suspect = self.suspects.get(suspect_name)
         if suspect:
             suspect.questioned = True
+            self.history.append(f"Questioned {suspect_name}.")
 
     def record_evidence(self, evidence_name):
+        if evidence_name in self.locked_evidence:
+            self.history.append(f"Cannot record evidence {evidence_name}: evidence is locked.")
+            return
         """Record discovery of key evidence.
 
         Args:
@@ -221,6 +251,20 @@ class MysteryPlot:
         """
         if evidence_name in self.key_evidence:
             self.key_evidence[evidence_name] = True
+            linked = self.evidence_links.get(evidence_name, [])
+            self.history.append(f"Found evidence: {evidence_name} (implicates: {', '.join(linked) if linked else 'unknown'})")
+
+    def branch_choice(self, choice):
+        """Branch investigation based on player choice."""
+        # Example: lock/unlock suspects/evidence based on choice
+        if choice == "trust_spacers":
+            self.locked_suspects.add("Francis Clousarr")
+            self.locked_evidence.add("spacer_conspiracy")
+            self.history.append("Branch: Trusted Spacers. Clousarr and spacer_conspiracy locked.")
+        elif choice == "pursue_medievalists":
+            self.locked_suspects.add("Han Fastolfe")
+            self.locked_evidence.add("r_sammy_transport")
+            self.history.append("Branch: Pursued Medievalists. Fastolfe and r_sammy_transport locked.")
 
     def can_accuse(self, player):
         """Check if player has enough evidence to make an accusation.
@@ -285,6 +329,8 @@ class MysteryPlot:
             str: Formatted mystery summary
         """
         evidence_count = sum(1 for v in self.key_evidence.values() if v)
+        ruled_out = [s.name for s in self.suspects.values() if s.alibis_verified and not s.guilty]
+        timeline = '\n'.join(self.history[-5:]) if self.history else 'No actions yet.'
         summary = f"""
         ╔═════════════════════════════════════════╗
         ║          MURDER INVESTIGATION           ║
@@ -296,6 +342,11 @@ class MysteryPlot:
         ║ Alibis Verified: {sum(1 for s in self.suspects.values() if s.alibis_verified)}/7
         ║ Evidence Found: {evidence_count}/5
         ║ Time Until Spacers Leave: {self.time_remaining} min
+        ║ Ruled Out: {', '.join(ruled_out) if ruled_out else 'None'}
+        ║ Locked Suspects: {', '.join(self.locked_suspects) if self.locked_suspects else 'None'}
+        ║ Locked Evidence: {', '.join(self.locked_evidence) if self.locked_evidence else 'None'}
+        ║ Recent Actions: 
+        ║   {timeline}
         ╚═════════════════════════════════════════╝
         """
         return summary
