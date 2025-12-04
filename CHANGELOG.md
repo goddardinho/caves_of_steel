@@ -249,7 +249,7 @@ For existing saves from v0.2.0/v0.3.0:
 - Automatic directory creation with validation
 
 #### 2. **Player Name Customization** 🎭
-- Customize detective name instead of default "Elijah Bailey"
+- Customize detective name instead of default "Elijah Baley"
 - Names displayed throughout the game
 - Supports multi-word names (up to 30 characters)
 - Option to change name mid-game via `settings` command
@@ -383,3 +383,21 @@ For existing games:
 **Release Date**: November 14, 2025  
 **Version**: 0.2.0  
 **Status**: Stable
+
+## Version 0.7.0 - December 4, 2025
+
+### Major Changes
+- All references to 'Elijah Bailey' corrected to 'Elijah Baley' throughout code and documentation.
+- Enhanced `settings` command: now supports changing detective name, difficulty, text speed, and accessibility mode, with improved menu/help text.
+- Expanded `help` command output: added detailed settings and navigation instructions for better usability.
+- Typing `exit` no longer quits the game; only `quit` will exit. `exit` now shows an unknown command message.
+- Removed non-canonical NPC 'Commander Lije Bailey' from all code and documentation.
+- Renamed 'Spacer Embassy' to 'Spacetown' everywhere (location key, display name, alibi text, changelog).
+- Migrated major features section from changelog to `TODO.md` for ongoing planning and visibility.
+- Confirmed all modified files compile and demo runs successfully.
+
+### Refactors & Documentation
+- Improved codebase consistency and accuracy with book canon.
+- Updated changelog and TODO.md to reflect current feature set and refactors.
+
+---

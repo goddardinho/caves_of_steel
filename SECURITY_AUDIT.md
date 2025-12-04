@@ -157,7 +157,7 @@ json.dump(save_data, f, indent=2)  # ✅ Safe
 ```json
 {
   "player": {
-    "name": "Elijah Bailey",           // ← Player-chosen, non-sensitive
+    "name": "Elijah Baley",           // ← Player-chosen, non-sensitive
     "current_location": "bedroom",
     "difficulty": "normal",
     "investigation_points": 10,
