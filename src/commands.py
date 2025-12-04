@@ -82,6 +82,8 @@ class CommandProcessor:
             "mystery": self.cmd_mystery,
             "puzzle": self.cmd_puzzle,
             "settings": self.cmd_settings,
+            "quit": self.cmd_quit,
+            # 'exit' intentionally omitted so it does NOT quit the game
         }
 
     def _resolve_npc_name(self, input_name):
@@ -240,7 +242,11 @@ This might be connected to the crime scene.""",
             "francis clousarr": "A thin, intense man behind detention glass. His eyes burn with conviction and resentment toward robots.",
         }
 
-        description = descriptions.get(canonical_npc.lower(), f"You observe {canonical_npc} carefully.")
+        if canonical_npc:
+            key = canonical_npc.lower()
+            description = descriptions.get(key, f"You observe {canonical_npc} carefully.")
+        else:
+            description = "You observe an unknown character carefully."
         print(f"\n👤 {description}\n")
 
     def cmd_talk(self, args):
@@ -282,7 +288,9 @@ This might be connected to the crime scene.""",
             rel_manager = getattr(self.game_state, "relationships", None)
             if rel_manager:
                 # Find the canonical NPC name in the relationships map (case-insensitive)
-                match = next((k for k in rel_manager.relationships.keys() if k.lower() == canonical_npc.lower()), None)
+                match = None
+                if canonical_npc:
+                    match = next((k for k in rel_manager.relationships.keys() if k.lower() == canonical_npc.lower()), None)
                 if match:
                     rel_manager.talk_to_npc(match)
         except Exception:
@@ -592,46 +600,66 @@ This might be connected to the crime scene.""",
         """Help command - show available commands."""
         help_text = """
         ╔════════════════════════════════════════════════════════════╗
-        ║                   AVAILABLE COMMANDS                       ║
+        ║                   AVAILABLE COMMANDS                     ║
         ╠════════════════════════════════════════════════════════════╣
-        ║ MOVEMENT:                                                  ║
-        ║   go <direction>     Move to another location             ║
+        ║ MOVEMENT:                                                ║
+        ║   go <direction>     Move to another location            ║
+        ║     Example: go north, go east, go spacetown             ║
+        ║   look              Look around your surroundings        ║
+        ║   examine <thing>   Examine an object or person         ║
         ║                                                            ║
-        ║ INTERACTION:                                               ║
-        ║   look              Look around your surroundings         ║
-        ║   examine <thing>   Examine an object or person          ║
-        ║   talk <to person>  Speak with an NPC                    ║
-        ║   take <item>       Pick up an item                      ║
-        ║   take all          Pick up all items in location        ║
-        ║   drop <item>       Drop an item from inventory          ║
-        ║   drop all          Drop all items from inventory        ║
+        ║ INTERACTION:                                             ║
+        ║   talk <to person>  Speak with an NPC                   ║
+        ║   take <item>       Pick up an item                     ║
+        ║   take all          Pick up all items in location       ║
+        ║   drop <item>       Drop an item from inventory         ║
+        ║   drop all          Drop all items from inventory       ║
         ║                                                            ║
-        ║ INVESTIGATION:                                             ║
-        ║   mystery           Show mystery details                 ║
-        ║   accuse <person>   Accuse someone of the murder         ║
-        ║   relationships     Show NPC relationships               ║
-        ║   puzzle <id>       Solve a puzzle (access_code, etc.)   ║
+        ║ INVESTIGATION:                                           ║
+        ║   mystery           Show mystery details                ║
+        ║   accuse <person>   Accuse someone of the murder        ║
+        ║   relationships     Show NPC relationships              ║
+        ║   puzzle <id>       Solve a puzzle (access_code, etc.)  ║
         ║                                                            ║
-        ║ INFORMATION:                                               ║
-        ║   inventory (i)     Show what you're carrying            ║
-        ║   status            Show detective status & clues         ║
-        ║   stats             Show quick statistics                ║
-        ║   help              Show this help message                ║
+        ║ INFORMATION:                                             ║
+        ║   inventory (i)     Show what you're carrying           ║
+        ║   status            Show detective status & clues        ║
+        ║   stats             Show quick statistics               ║
+        ║   help              Show this help message               ║
         ║                                                            ║
-        ║ SETTINGS:                                                  ║
-        ║   settings          Open settings menu                   ║
-        ║   settings name     Change your detective name           ║
-        ║ FAMILY:                                                    ║
-        ║   ask <npc> <topic>   Ask an NPC about a topic (family-only) ║
-        ║   play <npc>          Play with a child NPC (Ben)           ║
-        ║   comfort <npc>       Comfort a worried family member (Jessie) ║
+        ║ SETTINGS:                                                ║
+        ║   settings          Open settings menu                  ║
+        ║   settings name <new_name>      Change your detective name║
+        ║   settings difficulty <level>   Change difficulty        ║
+        ║      (easy, normal, hard)                               ║
+        ║   settings textspeed <fast|normal|slow> Adjust text speed║
+        ║   settings accessibility <on|off> Toggle accessibility   ║
+        ║   settings show                 Show all settings        ║
+        ║   settings close                Close settings menu      ║
         ║                                                            ║
-        ║ SAVE/LOAD:                                                 ║
-        ║   save (s)          Save your game progress              ║
-        ║   load (l)          Load a previous save                 ║
+        ║ FAMILY:                                                  ║
+        ║   ask <npc> <topic>   Ask an NPC about a topic (family) ║
+        ║   play <npc>          Play with a child NPC (Ben)       ║
+        ║   comfort <npc>       Comfort a worried family member   ║
         ║                                                            ║
-        ║ GAME:                                                      ║
-        ║   quit              Exit the game                         ║
+        ║ SAVE/LOAD:                                               ║
+        ║   save (s)          Save your game progress             ║
+        ║   load (l)          Load a previous save                ║
+        ║                                                            ║
+        ║ GAME:                                                    ║
+        ║   quit              Exit the game                       ║
+        ╠════════════════════════════════════════════════════════════╣
+        ║ NAVIGATION TIPS:                                         ║
+        ║ - Use 'go <direction>' or 'go <location>' to move.       ║
+        ║ - Type 'look' to see your current surroundings.          ║
+        ║ - Use 'examine <thing>' for details on objects/NPCs.     ║
+        ║ - For a list of locations, type 'status' or 'look'.      ║
+        ╠════════════════════════════════════════════════════════════╣
+        ║ SETTINGS DETAILS:                                        ║
+        ║ - Change your detective name for immersion.              ║
+        ║ - Difficulty affects puzzle and investigation challenge. ║
+        ║ - Text speed adjusts how quickly text appears.           ║
+        ║ - Accessibility mode enables high-contrast display.      ║
         ╚════════════════════════════════════════════════════════════╝
         """
         print(help_text)
@@ -660,7 +688,7 @@ This might be connected to the crime scene.""",
         topic = parts[1].lower() if len(parts) > 1 else ""
 
         # Family-specific topics
-        if canonical_npc.lower() in ("jessie bailey",):
+        if canonical_npc and canonical_npc.lower() in ("jessie bailey",):
             if "dinner" in topic or "meal" in topic:
                 print("\n💬 Jessie: 'Yes — dinner at seven. Ben is excited.'\n")
                 try:
@@ -671,7 +699,7 @@ This might be connected to the crime scene.""",
             print("\n💬 Jessie: 'I'm busy right now, love. Later?'\n")
             return
 
-        if canonical_npc.lower() in ("ben bailey",):
+        if canonical_npc and canonical_npc.lower() in ("ben bailey",):
             if "robot" in topic:
                 print("\n💬 Ben: 'Robots are cool! They can walk and talk.'\n")
                 try:
@@ -693,7 +721,7 @@ This might be connected to the crime scene.""",
         npc_input = args.lower().strip()
         canonical_npc = self._resolve_npc_name(npc_input)
         
-        if canonical_npc.lower() in ("ben bailey",):
+        if canonical_npc and canonical_npc.lower() in ("ben bailey",):
             print("\n🎲 You play a quick game with Ben. He laughs and tugs your sleeve.\n")
             try:
                 self.game_state.relationships.get_relationship("Ben Bailey").increase_trust(10)
@@ -712,7 +740,7 @@ This might be connected to the crime scene.""",
         npc_input = args.lower().strip()
         canonical_npc = self._resolve_npc_name(npc_input)
         
-        if canonical_npc.lower() in ("jessie bailey",):
+        if canonical_npc and canonical_npc.lower() in ("jessie bailey",):
             print("\n🤝 You take Jessie in a brief embrace and assure her you'll be careful.\n")
             try:
                 self.game_state.relationships.get_relationship("Jessie Bailey").increase_trust(8)
@@ -887,10 +915,15 @@ This might be connected to the crime scene.""",
         print("=" * 50)
         print(f"\nPlayer Name: {self.player.name}")
         print(f"Difficulty: {self.player.difficulty.capitalize()}")
+        print(f"Text Speed: {getattr(self.player, 'text_speed', 'Normal')}")
+        print(f"Accessibility: {getattr(self.player, 'accessibility', 'Standard')}")
         print("\nAvailable options:")
-        print("  settings name <new_name> - Change your detective name")
-        print("  settings show            - Show all settings")
-        print("  settings close           - Close settings menu\n")
+        print("  settings name <new_name>      - Change your detective name")
+        print("  settings difficulty <level>   - Change difficulty (easy, normal, hard)")
+        print("  settings textspeed <fast|normal|slow> - Adjust text speed")
+        print("  settings accessibility <on|off> - Toggle accessibility mode")
+        print("  settings show                 - Show all settings")
+        print("  settings close                - Close settings menu\n")
 
         if args:
             parts = args.split(maxsplit=1)
@@ -903,13 +936,36 @@ This might be connected to the crime scene.""",
                 else:
                     old_name = self.player.name
                     self.player.name = new_name
-                    print(
-                        f"✓ Detective name changed from '{old_name}' to '{new_name}'\n"
-                    )
+                    print(f"✓ Detective name changed from '{old_name}' to '{new_name}'\n")
+            elif option == "difficulty" and len(parts) > 1:
+                new_diff = parts[1].lower()
+                if new_diff not in ("easy", "normal", "hard"):
+                    print("❌ Difficulty must be easy, normal, or hard.\n")
+                else:
+                    old_diff = self.player.difficulty
+                    self.player.difficulty = new_diff
+                    self.game_state.difficulty = new_diff
+                    print(f"✓ Difficulty changed from '{old_diff}' to '{new_diff}'. (Note: Changing difficulty mid-game may affect balance.)\n")
+            elif option == "textspeed" and len(parts) > 1:
+                speed = parts[1].lower()
+                if speed not in ("fast", "normal", "slow"):
+                    print("❌ Text speed must be fast, normal, or slow.\n")
+                else:
+                    self.player.text_speed = speed
+                    print(f"✓ Text speed set to '{speed}'.\n")
+            elif option == "accessibility" and len(parts) > 1:
+                acc = parts[1].lower()
+                if acc not in ("on", "off"):
+                    print("❌ Accessibility must be 'on' or 'off'.\n")
+                else:
+                    self.player.accessibility = "High Contrast" if acc == "on" else "Standard"
+                    print(f"✓ Accessibility mode set to '{self.player.accessibility}'.\n")
             elif option == "show":
                 print("\n📋 CURRENT GAME SETTINGS:")
                 print(f"  Detective Name: {self.player.name}")
                 print(f"  Difficulty Level: {self.player.difficulty.capitalize()}")
+                print(f"  Text Speed: {getattr(self.player, 'text_speed', 'Normal')}")
+                print(f"  Accessibility: {getattr(self.player, 'accessibility', 'Standard')}")
                 print(f"  Current Location: {self.player.current_location}")
                 print(f"  Investigation Points: {self.player.investigation_points}")
                 print(f"  Energy: {self.player.energy}%")
@@ -919,3 +975,9 @@ This might be connected to the crime scene.""",
                 print("Closing settings menu.\n")
             else:
                 print("❌ Unknown settings option.\n")
+
+    def cmd_quit(self, args):
+        """Quit command - exit the game."""
+        print("\nThank you for playing! Goodbye.\n")
+        import sys
+        sys.exit(0)

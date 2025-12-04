@@ -41,11 +41,11 @@ Players can enter a custom name for their detective character instead of being s
 ### How it Works
 - **Prompt**: After selecting save path, players are asked to enter their detective name
 - **Validation**: Names are limited to 30 characters
-**Default**: Pressing Enter without typing uses "Elijah Bailey"
+**Default**: Pressing Enter without typing uses "Elijah Baley"
 - **Display**: The custom name appears in:
   - Character status displays
   - Save files
-Enter your detective name (or press Enter for 'Elijah Bailey'): Sherlock Holmes
+Enter your detective name (or press Enter for 'Elijah Baley'): Sherlock Holmes
   - Detective status formatting
 
 ### Example
@@ -130,7 +130,7 @@ Display game statistics at a glance with the `stats` command.
 ==================================================
 QUICK STATS
 ==================================================
-Detective: Elijah Bailey
+Detective: Elijah Baley
 Difficulty: Hard
 Investigation Points: 45
 Clues Found: 3

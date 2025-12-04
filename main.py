@@ -65,10 +65,10 @@ def prompt_for_player_name():
     """
     while True:
         name = input(
-            "\nEnter your detective name (or press Enter for 'Elijah Bailey'): "
+            "\nEnter your detective name (or press Enter for 'Elijah Baley'): "
         ).strip()
         if not name:
-            name = "Elijah Bailey"
+            name = "Elijah Baley"
         if len(name) > 30:
             print("❌ Name too long (max 30 characters). Please try again.")
             continue
@@ -127,7 +127,7 @@ def main():
 
     # Prompt for player name and difficulty (skip prompts in demo)
     if demo_mode:
-        player_name = "Elijah Bailey"
+        player_name = "Elijah Baley"
         difficulty = "normal"
     else:
         player_name = prompt_for_player_name()
